@@ -45,7 +45,7 @@ for _,v := range AvatarExcelConfigData {
     v.SkillDepotId
 }
 
-//人物基础升级提升值(累加)[1-100]
+//人物基础升级提升值(乘积)[1-100]
 for _,v := range AvatarCurveExcelConfigData {
     //级别
     v.Level
