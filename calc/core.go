@@ -64,49 +64,49 @@ package calc
 //							施加减抗
 
 //基础伤害值
-func getBaseDamageValue() float64 {
+func (c InputData) getBaseDamageValue(art Artifacts) float64 {
 	return 1.0
 }
 
 //增加伤害值
-func getBoostDamageValue() float64 {
+func (c InputData) getBoostDamageValue(art Artifacts) float64 {
 	BaseDamageValueMat := getBaseDamageValue()
 	BoostMat := .0
 	return BaseDamageValueMat * BoostMat
 }
 
 //基础伤害值 + 增加伤害值
-func getBaseDamageValueWithBoost() float64 {
+func (c InputData) getBaseDamageValueWithBoost() float64 {
 	return getBaseDamageValue() + getBoostDamageValue()
 }
 
 //暴击率
-func getCriticalRate() float64 {
+func (c InputData) getCriticalRate() float64 {
 	return 0.05
 }
 
 //暴击伤害加成系数
-func getCriticalBoost() float64 {
+func (c InputData) getCriticalBoost() float64 {
 	return 1.0 + 0.5
 }
 
 //增幅反应加成系数
-func getElementBoost() float64 {
+func (c InputData) getElementBoost() float64 {
 	return 1.0 + 0.0
 }
 
 //等级，减防相关增减伤系数
-func getLevelAndDefEffect() float64 {
+func (c InputData) getLevelAndDefEffect() float64 {
 	return 0.5
 }
 
 //各元素抗性系数
-func getResistanceEffect() float64 {
+func (c InputData) getResistanceEffect() float64 {
 	return 0.9
 }
 
 //最终结果
-func GetDamageValue() float64 {
+func (c InputData) GetDamageValue() float64 {
 	valuebase := getBaseDamageValueWithBoost() * getLevelAndDefEffect() * getResistanceEffect()
 	valueWithCrit := valuebase * getCriticalBoost()
 	valueWithCritExpect := valueWithCrit * getCriticalRate()

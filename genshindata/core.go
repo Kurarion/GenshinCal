@@ -28,3 +28,8 @@ func GetAvatarByName(name string) *Avatar {
 	}
 	return GetAvatar(targeID)
 }
+
+//取得列表
+func GetAvatarMap() map[uint64]*Avatar {
+	return avatar
+}

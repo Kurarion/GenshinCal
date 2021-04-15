@@ -1,0 +1,20 @@
+<html>
+    <head>
+        <title>GenshinCal</title>
+        <meta charset="utf-8" />
+        <script src="./js/func.js"></script>
+        <script src="./js/jquery-3.5.1.min.js"></script>
+    </head>
+    <body>
+        <form name="test" method="get">
+            <select id="characterSelect" onchange="getCharacter(this.value,'characterResult')">
+                {{range . -}}
+                <option value="{{html .Id}}">{{html .Name}}</option>
+                {{- end}}
+            </select>
+            <br>
+            <br>
+            <span id="characterResult"></span>
+        </form>
+    </body>
+</html>
