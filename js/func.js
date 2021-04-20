@@ -1,7 +1,7 @@
 
 function getCharacter(value,toSetName){
     htmlobj=$.post(
-        "./character",
+        "./api/character",
         value,
         function(result){$("#" + toSetName).html(result)}
     );

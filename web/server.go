@@ -22,7 +22,7 @@ func init() {
 //Start Server启动
 func Start(addr string) {
 	http.Handle("/js/", http.FileServer(http.Dir("")))
-	http.HandleFunc("/character", character)
+	http.HandleFunc("/api/character", character)
 	http.HandleFunc("/", root)
 	err := http.ListenAndServe(addr, nil)
 	if err != nil {
@@ -50,6 +50,9 @@ func character(w http.ResponseWriter, r *http.Request) {
 
 func root(w http.ResponseWriter, r *http.Request) {
 	log(r)
+	// r.ParseForm()
+	// fmt.Println(r.Form)
+
 	w.Header().Set("Content-Type", "text/html")
 	switch r.Method {
 	case "GET":

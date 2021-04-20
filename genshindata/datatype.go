@@ -18,13 +18,34 @@ type avatarBaseData struct {
 }
 type avatarBaseListData []avatarBaseData
 
+//武器定义
+type weaponBaseData struct {
+	Id              uint64                 `json:"Id"`
+	NameTextMapHash uint64                 `json:"NameTextMapHash"`
+	DescTextMapHash uint64                 `json:"DescTextMapHash"`
+	RankLevel       int                    `json:"RankLevel"`
+	IconName        string                 `json:"Icon"`
+	WeaponType      string                 `json:"WeaponType"`
+	PropGrowCurves  []weaponPropGrowCurves `json:"WeaponProp"`
+	WeaponPromoteId uint64                 `json:"WeaponPromoteId"`
+	SkillAffix      []uint64               `json:"SkillAffix"`
+}
+type weaponBaseListData []weaponBaseData
+
 //成长参数
 type propGrowCurves struct {
 	Type  string `json:"Type"`
 	Value string `json:"GrowCurve"`
 }
 
-//人物基础升级提升值
+//武器成长参数
+type weaponPropGrowCurves struct {
+	PropType  string  `json:"PropType"`
+	InitValue float64 `json:"InitValue"`
+	Type      string  `json:"Type"`
+}
+
+//人物/武器 基础升级提升
 type growCurvesData struct {
 	Level      int     `json:"Level"`
 	CurveInfos []curve `json:"CurveInfos"`
@@ -37,9 +58,10 @@ type curve struct {
 	Value float64 `json:"Value"`
 }
 
-//人物突破提升值
+//人物/武器 突破提升值
 type promoteData struct {
 	AvatarPromoteId     uint64    `json:"AvatarPromoteId"`
+	WeaponPromoteId     uint64    `json:"WeaponPromoteId"`
 	PromoteLevel        int       `json:"PromoteLevel"`
 	AddProps            []propAdd `json:"AddProps"`
 	RequiredPlayerLevel int       `json:"RequiredPlayerLevel"`
@@ -58,3 +80,32 @@ type propAdd struct {
 	PropType string  `json:"PropType"`
 	Value    float64 `json:"Value"`
 }
+
+//武器特效
+type skillAffixData struct {
+	Id              uint64    `json:"Id"`
+	AffixId         uint64    `json:"AffixId"`
+	Level           int       `json:"Level"`
+	NameTextMapHash uint64    `json:"NameTextMapHash"`
+	DescTextMapHash uint64    `json:"DescTextMapHash"`
+	ParamList       []float64 `json:"ParamList"`
+}
+type skillAffixListData []skillAffixData
+
+//圣遗物小词条刻度
+type reliquaryAffix struct {
+	Id        uint64  `json:"Id"`
+	DepotId   int     `json:"DepotId"`
+	PropType  string  `json:"PropType"`
+	PropValue float64 `json:"PropValue"`
+	Weight    int     `json:"Weight"`
+}
+type reliquaryAffixListData []reliquaryAffix
+
+//圣遗物主词条
+type reliquaryMain struct {
+	Rank     int       `json:"Rank"`
+	Level    int       `json:"Level"`
+	AddProps []propAdd `json:"AddProps"`
+}
+type reliquaryMainListData []reliquaryMain

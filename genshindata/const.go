@@ -27,7 +27,7 @@ const (
 	HEAL            = "FIGHT_PROP_HEAL_ADD"
 )
 
-//成长曲线类型
+//人物成长曲线类型
 const (
 	C_HP5      = "GROW_CURVE_HP_S5"
 	C_HP4      = "GROW_CURVE_HP_S4"
@@ -35,6 +35,28 @@ const (
 	C_ATTACK4  = "GROW_CURVE_ATTACK_S4"
 	C_DEFENSE5 = "GROW_CURVE_HP_S5"
 	C_DEFENSE4 = "GROW_CURVE_HP_S4"
+)
+
+//武器成长曲线类型
+const (
+	C_W_ATTACK101   = "GROW_CURVE_ATTACK_101"
+	C_W_ATTACK102   = "GROW_CURVE_ATTACK_102"
+	C_W_ATTACK103   = "GROW_CURVE_ATTACK_103"
+	C_W_ATTACK104   = "GROW_CURVE_ATTACK_104"
+	C_W_ATTACK105   = "GROW_CURVE_ATTACK_105"
+	C_W_CRITICAL101 = "GROW_CURVE_CRITICAL_101"
+	C_W_ATTACK201   = "GROW_CURVE_ATTACK_201"
+	C_W_ATTACK202   = "GROW_CURVE_ATTACK_202"
+	C_W_ATTACK203   = "GROW_CURVE_ATTACK_203"
+	C_W_ATTACK204   = "GROW_CURVE_ATTACK_204"
+	C_W_ATTACK205   = "GROW_CURVE_ATTACK_205"
+	C_W_CRITICAL201 = "GROW_CURVE_CRITICAL_201"
+	C_W_ATTACK301   = "GROW_CURVE_ATTACK_301"
+	C_W_ATTACK302   = "GROW_CURVE_ATTACK_302"
+	C_W_ATTACK303   = "GROW_CURVE_ATTACK_303"
+	C_W_ATTACK304   = "GROW_CURVE_ATTACK_304"
+	C_W_ATTACK305   = "GROW_CURVE_ATTACK_305"
+	C_W_CRITICAL301 = "GROW_CURVE_CRITICAL_301"
 )
 
 //文件信息
@@ -48,4 +70,16 @@ const (
 	avatarPromoteExcelConfigData = "/ExcelBinOutput/AvatarPromoteExcelConfigData.json"
 	//文字代码对应表
 	textMapData = "/TextMap/TextCHS.json"
+	//武器定义
+	weaponExcelConfigData = "/ExcelBinOutput/WeaponExcelConfigData.json"
+	//武器基础升级提升值(对应)
+	weaponCurveExcelConfigData = "/ExcelBinOutput/WeaponCurveExcelConfigData.json"
+	//武器突破提升值(对应)
+	weaponPromoteExcelConfigData = "/ExcelBinOutput/WeaponPromoteExcelConfigData.json"
+	//武器特效
+	EquipAffixExcelConfigData = "/ExcelBinOutput/EquipAffixExcelConfigData.json"
+	//圣遗物词条提升值
+	ReliquaryAffixExcelConfigData = "/ExcelBinOutput/ReliquaryAffixExcelConfigData.json"
+	//圣遗物主词条值
+	ReliquaryLevelExcelConfigData = "/ExcelBinOutput/ReliquaryLevelExcelConfigData.json"
 )
