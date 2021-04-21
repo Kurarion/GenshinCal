@@ -1,0 +1,26 @@
+{{ define "characterSelect" -}}
+<select id="characterTypeSelect" onchange="filterSelect(['character'])">
+    <option value=""></option>
+    {{with .GetWeaponTypeList -}}
+    {{range $i,$v := . -}}
+    <option value="{{$v}}">{{html $i}}</option>
+    {{- end}}
+    {{- end}}
+</select>
+<select id="characterSelect" onchange="getData(['character'])">
+    <option value=""></option>
+    {{range . -}}
+    <option value="{{.Id}}" type="{{html .WeaponType}}">{{html .Name}}</option>
+    {{- end}}
+</select>
+<select id="characterLevelSelect" onchange="getData(['character'])">
+    <option value=""></option>
+    {{ with .GetLevelList -}}
+    {{range $i,$v := . -}}
+    <option value="{{$i}}">{{html $i}}</option>
+    {{- end}}
+    {{- end}}
+</select>
+<br>
+<span id="characterResult"></span>
+{{- end }}

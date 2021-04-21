@@ -1,7 +1,7 @@
 package web
 
 import (
-	"bytes"
+	"encoding/json"
 	"fmt"
 	data "genshincal/genshindata"
 	"io"
@@ -12,17 +12,24 @@ import (
 )
 
 var rootHtmlTemplate *template.Template
+var initData InitData
 
 const logState = true
 
 func init() {
-	rootHtmlTemplate = template.Must(template.ParseFiles("./html/home.html"))
+	initData = InitData{
+		Avatar: data.GetAvatarMap(),
+		Weapon: data.GetWeaponMap(),
+	}
+	rootHtmlTemplate = template.Must(template.ParseGlob("./html/*.html"))
 }
 
 //Start Server启动
 func Start(addr string) {
 	http.Handle("/js/", http.FileServer(http.Dir("")))
 	http.HandleFunc("/api/character", character)
+	http.HandleFunc("/api/weapon", weapon)
+	http.HandleFunc("/api/weaponSkillAffix", weaponSkillAffix)
 	http.HandleFunc("/", root)
 	err := http.ListenAndServe(addr, nil)
 	if err != nil {
@@ -39,12 +46,54 @@ func log(r *http.Request) {
 func character(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case "POST":
-		buf := bytes.NewBuffer(make([]byte, 0, 100))
-		buf.ReadFrom(r.Body)
-		//
-		fmt.Println("test:", buf.String())
-		x := data.GetAvatar(buf.String())
-		io.WriteString(w, strconv.FormatFloat(x.LevelMap["90"].Hp, 'g', 10, 64))
+		if err := r.ParseForm(); err != nil {
+			fmt.Println("parse form error. err: ", err)
+		}
+
+		id := r.Form["id"][0]
+		level := r.Form["level"][0]
+
+		x := data.GetAvatar(id).LevelMap[level]
+		js, _ := json.Marshal(*x)
+
+		io.WriteString(w, string(js))
+	}
+}
+
+func weapon(w http.ResponseWriter, r *http.Request) {
+	switch r.Method {
+	case "POST":
+		if err := r.ParseForm(); err != nil {
+			fmt.Println("parse form error. err: ", err)
+		}
+
+		id := r.Form["id"][0]
+		level := r.Form["level"][0]
+
+		x := data.GetWeapon(id).LevelMap[level]
+		js, _ := json.Marshal(*x)
+
+		io.WriteString(w, string(js))
+	}
+}
+
+func weaponSkillAffix(w http.ResponseWriter, r *http.Request) {
+	switch r.Method {
+	case "POST":
+		if err := r.ParseForm(); err != nil {
+			fmt.Println("parse form error. err: ", err)
+		}
+
+		id := r.Form["id"][0]
+		level, err := strconv.Atoi(r.Form["level"][0])
+		if err != nil {
+			level = 1
+		}
+
+		x := data.GetWeapon(id).SkillAffixMap[level]
+		js, _ := json.Marshal(x)
+
+		io.WriteString(w, string(js))
 	}
 }
 
@@ -56,7 +105,7 @@ func root(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/html")
 	switch r.Method {
 	case "GET":
-		rootHtmlTemplate.Execute(w, data.GetAvatarMap())
+		rootHtmlTemplate.ExecuteTemplate(w, "home.html", initData)
 	case "POST":
 
 	}

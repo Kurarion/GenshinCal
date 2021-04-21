@@ -1,3 +1,5 @@
+{{ block "home" . }}
+<!DOCTYPE html>
 <html>
     <head>
         <title>GenshinCal</title>
@@ -7,14 +9,10 @@
     </head>
     <body>
         <form name="test" method="get">
-            <select id="characterSelect" onchange="getCharacter(this.value,'characterResult')">
-                {{range . -}}
-                <option value="{{html .Id}}">{{html .Name}}</option>
-                {{- end}}
-            </select>
+            {{template "characterSelect" .Avatar}}
             <br>
-            <br>
-            <span id="characterResult"></span>
+            {{template "weaponSelect" .Weapon}}
         </form>
     </body>
 </html>
+{{ end }}

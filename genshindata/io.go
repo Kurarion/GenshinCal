@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"os"
 	"reflect"
-	"strconv"
+	"regexp"
 )
 
 //资源URL
@@ -37,6 +37,10 @@ var reliquaryMainMap map[string]float64
 //序列化列表
 var saveObjList map[string]interface{}
 
+//正则
+var regx []*regexp.Regexp
+var regxReplaceList []string
+
 //保存路径
 const savePath = "./data"
 const slash = "/"
@@ -56,6 +60,15 @@ const artiDepotId = 501
 
 //圣遗物等级
 const artiLeveL = 21
+
+//武器最低星级
+const minWeaponRankLevel = 3
+
+//正则
+const regexColorToFront = `<color`
+const regexColorToFrontReplaced = `<font color`
+const regexColorToFrontSalsh = `</color`
+const regexColorToFrontSalshReplaced = `</font`
 
 //文件定义
 type fileType int
@@ -135,6 +148,14 @@ func init() {
 	reliquaryAffixMap = make(map[string]float64)
 	//圣遗物主词条值
 	reliquaryMainMap = make(map[string]float64)
+
+	//正则
+	regx = make([]*regexp.Regexp, 2, 2)
+	regx[0] = regexp.MustCompile(regexColorToFront)
+	regx[1] = regexp.MustCompile(regexColorToFrontSalsh)
+	regxReplaceList = make([]string, 2, 2)
+	regxReplaceList[0] = regexColorToFrontReplaced
+	regxReplaceList[1] = regexColorToFrontSalshReplaced
 
 	//初始化
 	initialize(false)
@@ -345,7 +366,7 @@ func update() error {
 			skillAffix{
 				skillAffixData: weaponSkillAffixDataList[i],
 				Name:           textMap[weaponSkillAffixDataList[i].NameTextMapHash],
-				Desc:           textMap[weaponSkillAffixDataList[i].DescTextMapHash],
+				Desc:           htmlColorTag(textMap[weaponSkillAffixDataList[i].DescTextMapHash]),
 			}
 	}
 	//圣遗物
@@ -406,7 +427,7 @@ func update() error {
 			currentProperty.Attack *= avatarGrowCurvesDataMap[ii].CurveInfos[attackTypeIndex].Value
 			currentProperty.Defense *= avatarGrowCurvesDataMap[ii].CurveInfos[defenseTypeIndex].Value
 
-			avatar[currentAvatarData.Id].LevelMap[strconv.Itoa(ii)] = currentProperty
+			avatar[currentAvatarData.Id].LevelMap[fmt.Sprintf("%02d", ii)] = currentProperty
 		}
 		//突破参数
 		list := avatarPromoteDataMap[currentAvatarData.AvatarPromoteId]
@@ -423,11 +444,11 @@ func update() error {
 			unlockMaxLevel := currentPromote.UnlockMaxLevel
 
 			for iii := unlockMaxLevel; iii >= requiredLevel; iii-- {
-				currentProperty = avatar[currentAvatarData.Id].LevelMap[strconv.Itoa(iii)]
+				currentProperty = avatar[currentAvatarData.Id].LevelMap[fmt.Sprintf("%02d", iii)]
 				//突破界限
 				if iii == requiredLevel {
 					newCurrentProperty := &Property{}
-					avatar[currentAvatarData.Id].LevelMap[strconv.Itoa(iii)+promotedMark] = newCurrentProperty
+					avatar[currentAvatarData.Id].LevelMap[fmt.Sprintf("%02d", iii)+promotedMark] = newCurrentProperty
 					copyStruct(newCurrentProperty, currentProperty)
 					currentProperty = newCurrentProperty
 				}
@@ -442,6 +463,9 @@ func update() error {
 	//武器
 	for i := range weaponBaseDataList {
 		currentWeaponData := &weaponBaseDataList[i]
+		if currentWeaponData.RankLevel < minWeaponRankLevel {
+			continue
+		}
 		weapon[currentWeaponData.Id] = &Weapon{
 			Id:              currentWeaponData.Id,
 			Name:            textMap[currentWeaponData.NameTextMapHash],
@@ -479,7 +503,7 @@ func update() error {
 				temp.FieldByName(weaponSubAffixName).SetFloat(currentWeaponData.PropGrowCurves[1].InitValue * weaponGrowCurvesDataMap[ii].CurveInfos[weaponSubAffixIndex].Value)
 			}
 
-			weapon[currentWeaponData.Id].LevelMap[strconv.Itoa(ii)] = currentProperty
+			weapon[currentWeaponData.Id].LevelMap[fmt.Sprintf("%02d", ii)] = currentProperty
 		}
 		//突破参数
 		list := weaponPromoteDataMap[currentWeaponData.WeaponPromoteId]
@@ -496,11 +520,11 @@ func update() error {
 			unlockMaxLevel := currentPromote.UnlockMaxLevel
 
 			for iii := unlockMaxLevel; iii >= requiredLevel; iii-- {
-				currentProperty = weapon[currentWeaponData.Id].LevelMap[strconv.Itoa(iii)]
+				currentProperty = weapon[currentWeaponData.Id].LevelMap[fmt.Sprintf("%02d", iii)]
 				//突破界限
 				if iii == requiredLevel {
 					newCurrentProperty := &Property{}
-					weapon[currentWeaponData.Id].LevelMap[strconv.Itoa(iii)+promotedMark] = newCurrentProperty
+					weapon[currentWeaponData.Id].LevelMap[fmt.Sprintf("%02d", iii)+promotedMark] = newCurrentProperty
 					copyStruct(newCurrentProperty, currentProperty)
 					currentProperty = newCurrentProperty
 				}
@@ -523,6 +547,14 @@ func copyStruct(dst, src interface{}) {
 		value := tempB.FieldByName(name)
 		tempA.FieldByName(name).Set(value)
 	}
+}
+
+func htmlColorTag(origin string) string {
+	var res = origin
+	for i := range regx {
+		res = regx[i].ReplaceAllString(res, regxReplaceList[i])
+	}
+	return res
 }
 
 //结果保存至本地

@@ -59,6 +59,15 @@ const (
 	C_W_CRITICAL301 = "GROW_CURVE_CRITICAL_301"
 )
 
+//武器种类
+const (
+	WEAPON_SWORD_ONE_HAND = "WEAPON_SWORD_ONE_HAND"
+	WEAPON_CLAYMORE       = "WEAPON_CLAYMORE"
+	WEAPON_POLE           = "WEAPON_POLE"
+	WEAPON_CATALYST       = "WEAPON_CATALYST"
+	WEAPON_BOW            = "WEAPON_BOW"
+)
+
 //文件信息
 const (
 	repositoryURL = `https://raw.githubusercontent.com/Dimbreath/GenshinData/master`
