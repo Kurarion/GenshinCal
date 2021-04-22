@@ -1,0 +1,156 @@
+{{define "propertyWindow" -}}
+<table id="{{.}}Property">
+    <tr>
+        <td>
+            <span>生命值: </span>
+        </td>
+        <td>
+            <input id="{{.}}Hp" />
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <span>攻击值: </span>
+        </td>
+        <td>
+            <input id="{{.}}Attack" />
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <span>防御值: </span>
+        </td>
+        <td>
+            <input id="{{.}}Defense" />
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <span>生命百分比: </span>
+        </td>
+        <td>
+            <input id="{{.}}Hp_percent" />
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <span>攻击百分比: </span>
+        </td>
+        <td>
+            <input id="{{.}}Attack_percent" />
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <span>防御百分比: </span>
+        </td>
+        <td>
+            <input id="{{.}}Defense_percent" />
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <span>暴击率: </span>
+        </td>
+        <td>
+            <input id="{{.}}Critical" />
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <span>暴击伤害: </span>
+        </td>
+        <td>
+            <input id="{{.}}CriticalHurt" />
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <span>充能效率: </span>
+        </td>
+        <td>
+            <input id="{{.}}ChargeEfficiency" />
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <span>治疗增益: </span>
+        </td>
+        <td>
+            <input id="{{.}}HealActiveUp" />
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <span>受治疗增益: </span>
+        </td>
+        <td>
+            <input id="{{.}}HealPassiveUp" />
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <span>元素精通: </span>
+        </td>
+        <td>
+            <input id="{{.}}ElementMaster" />
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <span>冰伤: </span>
+        </td>
+        <td>
+            <input id="{{.}}Ice" />
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <span>风伤: </span>
+        </td>
+        <td>
+            <input id="{{.}}Wind" />
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <span>物伤: </span>
+        </td>
+        <td>
+            <input id="{{.}}Physical" />
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <span>雷伤: </span>
+        </td>
+        <td>
+            <input id="{{.}}Elec" />
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <span>岩伤: </span>
+        </td>
+        <td>
+            <input id="{{.}}Rock" />
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <span>火伤: </span>
+        </td>
+        <td>
+            <input id="{{.}}Fire" />
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <span>水伤: </span>
+        </td>
+        <td>
+            <input id="{{.}}Water" />
+        </td>
+    </tr>
+</table>
+{{- end}}

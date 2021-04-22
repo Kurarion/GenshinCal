@@ -63,67 +63,36 @@ function createCallback(type) {
     switch (type){
         case TYPE_CHARACTER:
             func = function(result){
-                $("#" + type + "Result").html(parseJSON(type, result))
+                // $("#" + type + "Result").html(parseJSON(type, result))
+                setJSON(type, result);
             }
             break;
         case TYPE_WEAPON:
             func = function(result){
-                $("#" + type + "Result").html(parseJSON(type, result))
+                // $("#" + type + "Result").html(parseJSON(type, result))
+                setJSON(type, result);
             }
             break;
         case TYPE_WEAPON_SKILL_AFFIX:
             func = function(result){
-                $("#" + type + "Result").html(parseJSON(type, result))
+                $("#" + type + "Result").attr("title", parseJSON(type, result))
             }
             break;
     }
     return func
 }
 
+function setJSON(type,input){
+    var obj = JSON.parse(input)
+    for(var i in obj){
+        $("#" + type + i).val(obj[i])
+    }
+}
+
 function parseJSON(type, input){
     res = "";
     var obj = JSON.parse(input)
     switch (type){
-        case TYPE_CHARACTER:
-            res += "生命值: " + obj.Hp
-            res += "<br>攻击值: " + obj.Attack
-            res += "<br>防御值: " + obj.Defense
-            res += "<br>生命百分比: " + obj.Hp_percent
-            res += "<br>攻击百分比: " + obj.Attack_percent
-            res += "<br>防御百分比: " + obj.Defense_percent
-            res += "<br>暴击率: " + obj.Critical
-            res += "<br>暴击伤害: " + obj.CriticalHurt
-            res += "<br>充能效率: " + obj.ChargeEfficiency
-            res += "<br>治疗增益: " + obj.HealActiveUp
-            res += "<br>受治疗增益: " + obj.HealPassiveUp
-            res += "<br>元素精通: " + obj.ElementMaster
-            res += "<br>冰伤: " + obj.Ice
-            res += "<br>风伤: " + obj.Wind
-            res += "<br>物伤: " + obj.Physical
-            res += "<br>雷伤: " + obj.Elec
-            res += "<br>岩伤: " + obj.Rock
-            res += "<br>火伤: " + obj.Fire
-            res += "<br>水伤: " + obj.Water
-            break;
-        case TYPE_WEAPON:
-            res += "攻击值: " + obj.Attack
-            res += "<br>生命百分比: " + obj.Hp_percent
-            res += "<br>攻击百分比: " + obj.Attack_percent
-            res += "<br>防御百分比: " + obj.Defense_percent
-            res += "<br>暴击率: " + obj.Critical
-            res += "<br>暴击伤害: " + obj.CriticalHurt
-            res += "<br>充能效率: " + obj.ChargeEfficiency
-            res += "<br>治疗增益: " + obj.HealActiveUp
-            res += "<br>受治疗增益: " + obj.HealPassiveUp
-            res += "<br>元素精通: " + obj.ElementMaster
-            res += "<br>冰伤: " + obj.Ice
-            res += "<br>风伤: " + obj.Wind
-            res += "<br>物伤: " + obj.Physical
-            res += "<br>雷伤: " + obj.Elec
-            res += "<br>岩伤: " + obj.Rock
-            res += "<br>火伤: " + obj.Fire
-            res += "<br>水伤: " + obj.Water
-            break;
         case TYPE_WEAPON_SKILL_AFFIX:
             res += "特效名: " + obj.Name
             res += "<br>特效: <br>" + obj.Desc

@@ -1,4 +1,4 @@
-{{define "weaponSelect"}}
+{{define "weaponSelect" -}}
 <select id="weaponTypeSelect" onchange="filterSelect(['weapon'])">
     <option value=""></option>
     {{with .GetWeaponTypeList -}}
@@ -25,8 +25,4 @@
     <option value="{{$v}}">{{html $i}}</option>
     {{- end}}
 </select>
-<br>
-<span id="weaponResult"></span>
-<br>
-<span id="weaponSkillAffixResult"></span>
-{{end}}
+{{- end}}

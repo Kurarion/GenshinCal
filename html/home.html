@@ -9,9 +9,32 @@
     </head>
     <body>
         <form name="test" method="get">
-            {{template "characterSelect" .Avatar}}
-            <br>
-            {{template "weaponSelect" .Weapon}}
+            <table>
+                <tr>
+                    <td align="center">
+                        <span >角色</span>
+                    </td>
+                    <td align="center">
+                        <span id="weaponSkillAffixResult" href="#" title="">武器</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center">
+                        {{template "characterSelect" .Avatar}}
+                    </td>
+                    <td align="center">
+                        {{template "weaponSelect" .Weapon}}
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center" valign = "top">
+                        {{template "characterResult" ""}}
+                    </td>
+                    <td align="center" valign = "top">
+                        {{template "weaponResult" ""}}
+                    </td>
+                </tr>
+            </table>        
         </form>
     </body>
 </html>
