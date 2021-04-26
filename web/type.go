@@ -81,7 +81,7 @@ func (c InitData) GetReliquaryList() [][]map[string][][]string {
 
 	affix := func() [][]string {
 		a := []([]string){
-			[]string{getNameFunc(data.ATTACK_ADD), data.ATTACK_ADD, data.ATTACK_ADD_NAME},
+			[]string{getNameFunc(data.HP_ADD), data.HP_ADD, data.HP_ADD_NAME},
 			[]string{getNameFunc(data.HP_PERCENT), data.HP_PERCENT, data.HP_PERCENT_NAME},
 			[]string{getNameFunc(data.ATTACK_ADD), data.ATTACK_ADD, data.ATTACK_ADD_NAME},
 			[]string{getNameFunc(data.ATTACK_PERCENT), data.ATTACK_PERCENT, data.ATTACK_PERCENT_NAME},

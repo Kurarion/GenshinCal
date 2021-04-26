@@ -5,7 +5,7 @@
     {{range $i,$v := . -}}
     {{range $ii,$vv := $v -}}
     {{$isMain := eq $i 0 -}}
-    <select id="reliquary{{$pos}}{{$ii}}" onchange="{{if $isMain}}setReliquaryMainValue('{{$pos}}','{{$ii}}');{{else}}resetReliquaryAffixValue('{{$pos}}','{{$ii}}');{{end}}">
+    <select id="reliquary{{$pos}}{{$ii}}" onchange="hideOtherSelect('{{$pos}}','{{$ii}}');{{if $isMain}}setReliquaryMainValue('{{$pos}}','{{$ii}}');{{else}}resetReliquaryAffixValue('{{$pos}}','{{$ii}}');{{end}}">
     <option value=""></option>
     {{range $i,$v := . -}}
     <option value="{{index $v 1}}" propName="{{index $v 0}}">{{index $v 2 | html}}</option>

@@ -167,6 +167,29 @@ function filterSelect(type){
     });
 }
 
+function hideOtherSelect(pos,index){
+    thisSelect = getReliquarySelectObj(pos,index);
+    thisSelectID = thisSelect.attr('id');
+    thisDiv = thisSelect.parent();
+    thisDivID = thisDiv.attr('id');
+    value = thisSelect.val();
+    allSelectObjs = $("#" + thisDivID + " select");
+    var values = [];
+    allSelectObjs.each(function(i,v){
+        val = $(v).val();
+        if(val.length != 0){
+            values.push(val);
+        }
+    });
+    allSelectObjs.not("#" + thisSelectID).children().each(function(i,v){
+        if(-1 == values.indexOf($(v).attr("value"))){
+            $(v).show();
+        }else{
+            $(v).hide();
+        }
+    });
+}
+
 function getReliquaryValueInputObj(pos,index){
     return $("#" + TYPE_RELIQUARY + pos + index + "Value");
 }
