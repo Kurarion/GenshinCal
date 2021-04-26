@@ -18,8 +18,9 @@ const logState = true
 
 func init() {
 	initData = InitData{
-		Avatar: data.GetAvatarMap(),
-		Weapon: data.GetWeaponMap(),
+		Avatar:  data.GetAvatarMap(),
+		Weapon:  data.GetWeaponMap(),
+		Monster: data.GetMonsterMap(),
 	}
 	rootHtmlTemplate = template.Must(template.ParseGlob("./html/*.html"))
 }
@@ -29,6 +30,9 @@ func Start(addr string) {
 	http.Handle("/js/", http.FileServer(http.Dir("")))
 	http.HandleFunc("/api/character", character)
 	http.HandleFunc("/api/weapon", weapon)
+	http.HandleFunc("/api/monster", monster)
+	http.HandleFunc("/api/reliquaryMain", reliquaryMain)
+	http.HandleFunc("/api/reliquaryAffix", reliquaryAffix)
 	http.HandleFunc("/api/weaponSkillAffix", weaponSkillAffix)
 	http.HandleFunc("/", root)
 	err := http.ListenAndServe(addr, nil)
@@ -49,6 +53,9 @@ func character(w http.ResponseWriter, r *http.Request) {
 		if err := r.ParseForm(); err != nil {
 			fmt.Println("parse form error. err: ", err)
 		}
+		if len(r.Form["id"]) == 0 || len(r.Form["level"]) == 0 {
+			return
+		}
 
 		id := r.Form["id"][0]
 		level := r.Form["level"][0]
@@ -66,12 +73,60 @@ func weapon(w http.ResponseWriter, r *http.Request) {
 		if err := r.ParseForm(); err != nil {
 			fmt.Println("parse form error. err: ", err)
 		}
+		if len(r.Form["id"]) == 0 || len(r.Form["level"]) == 0 {
+			return
+		}
 
 		id := r.Form["id"][0]
 		level := r.Form["level"][0]
 
 		x := data.GetWeapon(id).LevelMap[level]
 		js, _ := json.Marshal(*x)
+
+		io.WriteString(w, string(js))
+	}
+}
+
+func monster(w http.ResponseWriter, r *http.Request) {
+	switch r.Method {
+	case "POST":
+		if err := r.ParseForm(); err != nil {
+			fmt.Println("parse form error. err: ", err)
+		}
+		if len(r.Form["id"]) == 0 || len(r.Form["level"]) == 0 {
+			return
+		}
+
+		id := r.Form["id"][0]
+		level := r.Form["level"][0]
+
+		x := data.GetMonster(id).LevelMap[level]
+		js, _ := json.Marshal(*x)
+
+		io.WriteString(w, string(js))
+	}
+}
+
+func reliquaryMain(w http.ResponseWriter, r *http.Request) {
+	switch r.Method {
+	case "POST":
+		if err := r.ParseForm(); err != nil {
+			fmt.Println("parse form error. err: ", err)
+		}
+
+		x := data.GetReliquaryMainMap()
+		js, _ := json.Marshal(x)
+
+		io.WriteString(w, string(js))
+	}
+}
+
+func reliquaryAffix(w http.ResponseWriter, r *http.Request) {
+	switch r.Method {
+	case "POST":
+
+		x := data.GetReliquaryAffixMap()
+		js, _ := json.Marshal(x)
 
 		io.WriteString(w, string(js))
 	}

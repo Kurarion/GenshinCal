@@ -29,10 +29,16 @@ var weapon map[uint64]*Weapon
 var weaponNameMap map[string]uint64
 
 //圣遗物词条刻度
-var reliquaryAffixMap map[string]float64
+var reliquaryAffixMap map[string][]float64
 
 //圣遗物主词条值
 var reliquaryMainMap map[string]float64
+
+//怪物
+var monster map[uint64]*Monster
+
+//怪物名ID映射表
+var monsterNameMap map[string]uint64
 
 //序列化列表
 var saveObjList map[string]interface{}
@@ -48,12 +54,14 @@ const avatarFileName = "avatar_map.json"
 const weaponFileName = "weapon_map.json"
 const reliquaryAffixFileName = "reliquary_affix_map.json"
 const reliquaryMainFileName = "reliquary_main_map.json"
+const monsterFileName = "monster_map.json"
 
 //文件完整路径
 const avatarFileFullPath = savePath + slash + avatarFileName
 const weaponFileFullPath = savePath + slash + weaponFileName
 const reliquaryAffixFileFullPath = savePath + slash + reliquaryAffixFileName
 const reliquaryMainFileFullPath = savePath + slash + reliquaryMainFileName
+const monsterFileFullPath = savePath + slash + monsterFileName
 
 //圣遗物词条depotID
 const artiDepotId = 501
@@ -94,17 +102,21 @@ const (
 	weaponExcelConfig         = "weaponExcelConfigData"
 	weaponCurveExcelConfig    = "weaponCurveExcelConfigData"
 	weaponPromoteExcelConfig  = "weaponPromoteExcelConfigData"
-	EquipAffixExcelConfig     = "EquipAffixExcelConfigData"
-	ReliquaryAffixExcelConfig = "ReliquaryAffixExcelConfigData"
-	ReliquaryLevelExcelConfig = "ReliquaryLevelExcelConfigData"
+	equipAffixExcelConfig     = "EquipAffixExcelConfigData"
+	reliquaryAffixExcelConfig = "ReliquaryAffixExcelConfigData"
+	reliquaryLevelExcelConfig = "ReliquaryLevelExcelConfigData"
+	monsterExcelConfig        = "MonsterExcelConfigData"
+	monsterCurveExcelConfig   = "MonsterCurveExcelConfigData"
 	textMapFile               = "textMapData"
 )
 
 //级别
 const (
-	levelMin     = 1
-	levelMax     = 90
-	promotedMark = "+"
+	levelMin        = 1
+	levelMax        = 90
+	promotedMark    = "+"
+	MonsterLevelMin = 1
+	MonsterLevelMax = 100
 )
 
 func init() {
@@ -116,9 +128,11 @@ func init() {
 		weaponExcelConfig:         repositoryURL + weaponExcelConfigData,
 		weaponCurveExcelConfig:    repositoryURL + weaponCurveExcelConfigData,
 		weaponPromoteExcelConfig:  repositoryURL + weaponPromoteExcelConfigData,
-		EquipAffixExcelConfig:     repositoryURL + EquipAffixExcelConfigData,
-		ReliquaryAffixExcelConfig: repositoryURL + ReliquaryAffixExcelConfigData,
-		ReliquaryLevelExcelConfig: repositoryURL + ReliquaryLevelExcelConfigData,
+		equipAffixExcelConfig:     repositoryURL + EquipAffixExcelConfigData,
+		reliquaryAffixExcelConfig: repositoryURL + ReliquaryAffixExcelConfigData,
+		reliquaryLevelExcelConfig: repositoryURL + ReliquaryLevelExcelConfigData,
+		monsterExcelConfig:        repositoryURL + MonsterExcelConfigData,
+		monsterCurveExcelConfig:   repositoryURL + MonsterCurveExcelConfigData,
 		textMapFile:               repositoryURL + textMapData,
 	}
 	//文件列表初始化
@@ -128,12 +142,14 @@ func init() {
 		"weapon_map":          {path: weaponFileFullPath, class: js},
 		"reliquary_affix_map": {path: reliquaryAffixFileFullPath, class: js},
 		"reliquary_main_map":  {path: reliquaryMainFileFullPath, class: js},
+		"monster_map":         {path: monsterFileFullPath, class: js},
 	}
 	saveObjList = map[string]interface{}{
 		avatarFileFullPath:         &avatar,
 		weaponFileFullPath:         &weapon,
 		reliquaryAffixFileFullPath: &reliquaryAffixMap,
 		reliquaryMainFileFullPath:  &reliquaryMainMap,
+		monsterFileFullPath:        &monster,
 	}
 	//角色对应初始化
 	avatar = make(map[uint64]*Avatar)
@@ -145,9 +161,13 @@ func init() {
 
 	//圣遗物对应初始化
 	//圣遗物词条刻度
-	reliquaryAffixMap = make(map[string]float64)
+	reliquaryAffixMap = make(map[string][]float64)
 	//圣遗物主词条值
 	reliquaryMainMap = make(map[string]float64)
+
+	//怪物对应初始化
+	monster = make(map[uint64]*Monster)
+	monsterNameMap = make(map[string]uint64)
 
 	//正则
 	regx = make([]*regexp.Regexp, 2, 2)
@@ -245,6 +265,14 @@ func initialize(forceUpdate bool) (err error) {
 		}
 	}
 
+	//怪物名ID映射
+	for i, v := range monster {
+		_, ok := monsterNameMap[v.Name]
+		if !ok {
+			monsterNameMap[v.Name] = i
+		}
+	}
+
 	return
 }
 
@@ -294,6 +322,9 @@ func update() error {
 	//圣遗物
 	reliquaryAffixDataList := make(reliquaryAffixListData, 0)
 	reliquaryMainDataList := make(reliquaryMainListData, 0)
+	//怪物
+	monsterBaseDataList := make(monsterBaseListData, 0)
+	monsterGrowCurvesDataList := make(growCurvesListData, 0)
 	//名
 	textMap := make(map[uint64]string)
 	for i, v := range content {
@@ -310,12 +341,16 @@ func update() error {
 			json.Unmarshal(v.Bytes(), &weaponGrowCurvesDataList)
 		case weaponPromoteExcelConfig:
 			json.Unmarshal(v.Bytes(), &weaponPromoteDataList)
-		case EquipAffixExcelConfig:
+		case equipAffixExcelConfig:
 			json.Unmarshal(v.Bytes(), &weaponSkillAffixDataList)
-		case ReliquaryAffixExcelConfig:
+		case reliquaryAffixExcelConfig:
 			json.Unmarshal(v.Bytes(), &reliquaryAffixDataList)
-		case ReliquaryLevelExcelConfig:
+		case reliquaryLevelExcelConfig:
 			json.Unmarshal(v.Bytes(), &reliquaryMainDataList)
+		case monsterExcelConfig:
+			json.Unmarshal(v.Bytes(), &monsterBaseDataList)
+		case monsterCurveExcelConfig:
+			json.Unmarshal(v.Bytes(), &monsterGrowCurvesDataList)
 		case textMapFile:
 			json.Unmarshal(v.Bytes(), &textMap)
 		}
@@ -374,7 +409,11 @@ func update() error {
 		if reliquaryAffixDataList[i].DepotId != artiDepotId {
 			continue
 		}
-		reliquaryAffixMap[reliquaryAffixDataList[i].PropType] = reliquaryAffixDataList[i].PropValue
+		temp, have := reliquaryAffixMap[reliquaryAffixDataList[i].PropType]
+		if !have {
+			temp = make([]float64, 0)
+		}
+		reliquaryAffixMap[reliquaryAffixDataList[i].PropType] = append(temp, reliquaryAffixDataList[i].PropValue)
 	}
 	for i := len(reliquaryMainDataList) - 1; i >= 0; i-- {
 		if reliquaryMainDataList[i].Level == artiLeveL {
@@ -383,6 +422,15 @@ func update() error {
 			}
 			break
 		}
+	}
+	//怪物
+	monsterGrowCurvesDataMap := make(map[int]*growCurvesData)
+	for i := range monsterGrowCurvesDataList {
+		monsterGrowCurvesDataMap[monsterGrowCurvesDataList[i].Level] = &monsterGrowCurvesDataList[i]
+	}
+	monsterCurvesIndexMap := make(map[string]int)
+	for i, v := range monsterGrowCurvesDataMap[1].CurveInfos {
+		monsterCurvesIndexMap[v.Type] = i
 	}
 	//计算
 	//人物
@@ -534,6 +582,47 @@ func update() error {
 					temp.FieldByName(addPropNames[iiii]).SetFloat(temp.FieldByName(addPropNames[iiii]).Float() + currentPromote.AddProps[iiii].Value)
 				}
 			}
+		}
+	}
+	//怪物
+	for i := range monsterBaseDataList {
+		currentMonsterData := &monsterBaseDataList[i]
+		monster[currentMonsterData.Id] = &Monster{
+			Id:              currentMonsterData.Id,
+			Name:            textMap[currentMonsterData.NameTextMapHash],
+			NameTextMapHash: currentMonsterData.NameTextMapHash,
+			MonsterName:     currentMonsterData.MonsterName,
+			Type:            currentMonsterData.Type,
+			LevelMap:        make(map[string]*MonsterProperty),
+		}
+		//级别曲线参数
+		var hpTypeIndex int
+		var attackTypeIndex int
+		var defenseTypeIndex int
+		for _, vv := range currentMonsterData.PropGrowCurves {
+			switch vv.Type {
+			case HP:
+				hpTypeIndex = monsterCurvesIndexMap[vv.Value]
+			case ATTACK:
+				attackTypeIndex = monsterCurvesIndexMap[vv.Value]
+			case DEFENSE:
+				defenseTypeIndex = monsterCurvesIndexMap[vv.Value]
+			}
+		}
+		for ii := MonsterLevelMin; ii <= MonsterLevelMax; ii++ {
+			currentProperty := &MonsterProperty{
+				Hp:          currentMonsterData.HpBase,
+				Attack:      currentMonsterData.AttackBase,
+				Defense:     currentMonsterData.DefenseBase,
+				subHurtData: currentMonsterData.subHurtData,
+			}
+			currentProperty.Level = ii
+			//此等级数值
+			currentProperty.Hp *= monsterGrowCurvesDataMap[ii].CurveInfos[hpTypeIndex].Value
+			currentProperty.Attack *= monsterGrowCurvesDataMap[ii].CurveInfos[attackTypeIndex].Value
+			currentProperty.Defense *= monsterGrowCurvesDataMap[ii].CurveInfos[defenseTypeIndex].Value
+
+			monster[currentMonsterData.Id].LevelMap[fmt.Sprintf("%03d", ii)] = currentProperty
 		}
 	}
 	return nil

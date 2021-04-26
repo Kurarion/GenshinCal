@@ -7,7 +7,7 @@
         <script src="./js/func.js"></script>
         <script src="./js/jquery-3.5.1.min.js"></script>
     </head>
-    <body>
+    <body onload="init(['reliquaryMain','reliquaryAffix'])">
         <form name="test" method="get">
             <table>
                 <tr>
@@ -17,6 +17,18 @@
                     <td align="center">
                         <span id="weaponSkillAffixResult" href="#" title="">武器</span>
                     </td>
+                    <td align="center">
+                        <span >圣遗物</span>
+                    </td>
+                    <td align="center">
+                        <span >圣遗物套装效果</span>
+                    </td>
+                    <td align="center">
+                        <span >其它</span>
+                    </td>
+                    <td align="center">
+                        <span >怪物</span>
+                    </td>
                 </tr>
                 <tr>
                     <td align="center">
@@ -25,6 +37,18 @@
                     <td align="center">
                         {{template "weaponSelect" .Weapon}}
                     </td>
+                    <td align="center">
+                        
+                    </td>
+                    <td align="center">
+                        
+                    </td>
+                    <td align="center">
+                        
+                    </td>
+                    <td align="center">
+                        {{template "monsterSelect" .Monster}}
+                    </td>
                 </tr>
                 <tr>
                     <td align="center" valign = "top">
@@ -32,6 +56,18 @@
                     </td>
                     <td align="center" valign = "top">
                         {{template "weaponResult" ""}}
+                    </td>
+                    <td align="center" valign = "top">
+                        {{template "reliquary" .GetReliquaryList}}
+                    </td>
+                    <td align="center" valign = "top">
+                        {{template "reliquarySet" ""}}
+                    </td>
+                    <td align="center" valign = "top">
+                        {{template "other" ""}}
+                    </td>
+                    <td align="center" valign = "top">
+                        {{template "monsterResult" ""}}
                     </td>
                 </tr>
             </table>        

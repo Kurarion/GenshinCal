@@ -1,0 +1,16 @@
+{{ define "monsterSelect" -}}
+<select id="monsterSelect" onchange="getData(['monster'])">
+    <option value=""></option>
+    {{range . -}}
+    <option value="{{.Id}}" type="{{html .Type}}">{{html .Name}}</option>
+    {{- end}}
+</select>
+<select id="monsterLevelSelect" onchange="getData(['monster'])">
+    <option value=""></option>
+    {{ with .GetLevelList -}}
+    {{range $i,$v := . -}}
+    <option value="{{$i}}">{{html $i}}</option>
+    {{- end}}
+    {{- end}}
+</select>
+{{- end }}

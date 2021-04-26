@@ -70,19 +70,49 @@ func GetReliquaryMainMap() map[string]float64 {
 }
 
 //取得满级圣遗物小词条刻度
-func GetReliquaryAffixMap() map[string]float64 {
+func GetReliquaryAffixMap() map[string][]float64 {
 	return reliquaryAffixMap
+}
+
+//取得怪物
+func GetMonster(id interface{}) *Monster {
+
+	var targeID uint64
+	switch v := id.(type) {
+	case string:
+		targeID, _ = strconv.ParseUint(v, 10, 64)
+	case uint64:
+		targeID = v
+	case int:
+		targeID = uint64(v)
+	}
+
+	return monster[targeID]
+}
+
+//取得怪物
+func GetMonsterByName(name string) *Monster {
+	targeID, ok := monsterNameMap[name]
+	if !ok {
+		return nil
+	}
+	return GetMonster(targeID)
+}
+
+//取得怪物列表
+func GetMonsterMap() map[uint64]*Monster {
+	return monster
 }
 
 //GetNameFromTypeCode genshindataType名转换属性名
 func GetNameFromTypeCode(code string) string {
 	name := ""
 	switch code {
-	case HP:
+	case HP, HP_ADD:
 		name = "Hp"
-	case ATTACK:
+	case ATTACK, ATTACK_ADD:
 		name = "Attack"
-	case DEFENSE:
+	case DEFENSE, DEFENSE_ADD:
 		name = "Defense"
 	case HP_PERCENT:
 		name = "Hp_percent"

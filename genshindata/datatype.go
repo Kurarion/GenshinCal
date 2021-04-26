@@ -109,3 +109,29 @@ type reliquaryMain struct {
 	AddProps []propAdd `json:"AddProps"`
 }
 type reliquaryMainListData []reliquaryMain
+
+//怪物定义
+type monsterBaseData struct {
+	Id              uint64           `json:"Id"`
+	MonsterName     string           `json:"MonsterName"`
+	Type            string           `json:"Type"`
+	NameTextMapHash uint64           `json:"NameTextMapHash"`
+	HpBase          float64          `json:"HpBase"`
+	AttackBase      float64          `json:"AttackBase"`
+	DefenseBase     float64          `json:"DefenseBase"`
+	PropGrowCurves  []propGrowCurves `json:"PropGrowCurves"`
+	subHurtData
+}
+type monsterBaseListData []monsterBaseData
+
+//抗性定义
+type subHurtData struct {
+	FireSubHurt     float64 `json:"FireSubHurt"`
+	GrassSubHurt    float64 `json:"GrassSubHurt"`
+	WaterSubHurt    float64 `json:"WaterSubHurt"`
+	ElecSubHurt     float64 `json:"ElecSubHurt"`
+	WindSubHurt     float64 `json:"WindSubHurt"`
+	IceSubHurt      float64 `json:"IceSubHurt"`
+	RockSubHurt     float64 `json:"RockSubHurt"`
+	PhysicalSubHurt float64 `json:"PhysicalSubHurt"`
+}
