@@ -38,8 +38,8 @@
                     <td align="center">
                         {{template "weaponSelect" .Weapon}}
                     </td>
-                    <td align="center">
-                        
+                    <td align="center" valign = "top" rowspan="2">
+                        {{template "reliquary" .GetReliquaryList}}
                     </td>
                     <td align="center">
                         
@@ -59,9 +59,6 @@
                         {{template "weaponResult" ""}}
                     </td>
                     <td align="center" valign = "top">
-                        {{template "reliquary" .GetReliquaryList}}
-                    </td>
-                    <td align="center" valign = "top">
                         {{template "reliquarySet" ""}}
                     </td>
                     <td align="center" valign = "top">
@@ -69,9 +66,41 @@
                     </td>
                     <td align="center" valign = "top">
                         {{template "monsterResult" ""}}
+                        <br>
+                        <br>
+                        <br>
+                        <span >附加属性</span>
+                        <br>
+                        {{template "extraProperty" ""}}
                     </td>
                 </tr>
             </table>        
+        </form>
+        <form>
+            <table>
+                <tr>
+                    <!-- <td align="center">
+                        <span >附加属性</span>
+                    </td> -->
+                    <td align="center">
+                        <span >合计属性</span>
+                    </td>
+                    <td align="center">
+                        <span >伤害</span>
+                    </td>
+                </tr>
+                <tr>
+                    <!-- <td align="center" valign = "top">
+                        {{template "extraProperty" ""}}
+                    </td> -->
+                    <td align="center" valign = "top">
+                        {{template "allResult" ""}}
+                    </td>
+                    <td align="center" valign = "top">
+                        {{template "damageCalResult" ""}}
+                    </td>
+                </tr>
+            </table> 
         </form>
     </body>
 </html>

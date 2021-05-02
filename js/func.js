@@ -6,6 +6,10 @@ const TYPE_WEAPON_SKILL_AFFIX = "weaponSkillAffix";
 const TYPE_RELIQUARY = "reliquary";
 const TYPE_RELIQUARY_MAIN = "reliquaryMain";
 const TYPE_RELIQUARY_AFFIX = "reliquaryAffix";
+const TYPE_RELIQUARY_SET = "reliquarySet";
+const TYPE_OTHER = "other";
+const TYPE_EXTRA = "extra";
+const TYPE_ALL = "all";
 var reliquaryMainObj = {}
 var reliquaryAffixObj = {}
 const reliquaryMainName = "Main"
@@ -14,8 +18,31 @@ const reliquaryPonitName = "Ponit"
 const maxrReliquaryPonit = 5
 var reliquaryAffixAllValue = {}
 
+var propertyNameMap = {}
+
+const MAX_EXTRA_NUM = 4
+
 function init(param){
     getData(param);
+    propertyNameMap = {
+        "FIGHT_PROP_ATTACK": PROP_ATTACK,
+        "FIGHT_PROP_ATTACK_PERCENT": PROP_ATTACK_PERCENT,
+        "FIGHT_PROP_CHARGE_EFFICIENCY": PROP_CHARGE_EFFICIENCY,
+        "FIGHT_PROP_CRITICAL": PROP_CRITICAL,
+        "FIGHT_PROP_CRITICAL_HURT": PROP_CRITICAL_HURT,
+        "FIGHT_PROP_DEFENSE": PROP_DEFENSE,
+        "FIGHT_PROP_DEFENSE_PERCENT": PROP_DEFENSE_PERCENT,
+        "FIGHT_PROP_ELEMENT_MASTERY": PROP_ELEMENT_MASTERY,
+        "FIGHT_PROP_HP": PROP_HP,
+        "FIGHT_PROP_HP_PERCENT": PROP_HP_PERCENT,
+        "FIGHT_PROP_ICE_ADD_HURT": PROP_BOOST_ICE,
+        "FIGHT_PROP_WIND_ADD_HURT": PROP_BOOST_WIND,
+        "FIGHT_PROP_PHYSICAL_ADD_HURT": PROP_BOOST_PHYSICAL,
+        "FIGHT_PROP_ELEC_ADD_HURT": PROP_BOOST_ELEC,
+        "FIGHT_PROP_ROCK_ADD_HURT": PROP_BOOST_ROCK,
+        "FIGHT_PROP_FIRE_ADD_HURT": PROP_BOOST_FIRE,
+        "FIGHT_PROP_WATER_ADD_HURT": PROP_BOOST_WATER,
+    }
 }
 
 function initAllAffixValue(){
@@ -106,6 +133,7 @@ function createCallback(type) {
             func = function(result){
                 if(result != null && result.length != 0){
                     setJSON(type, result);
+                    update();
                 }
             }
             break;
@@ -228,11 +256,17 @@ function setReliquaryMainValue(pos,index){
         return
     }
     value = valueObj.data;
-    getReliquaryValueInputObj(pos,index).val(value);
+    var obj = getReliquaryValueInputObj(pos,index);
+    obj.val(value);
+    obj.attr("name",TYPE_RELIQUARY + propertyNameMap[getReliquarySelectObj(pos,index).val()]);
+    update();
 }
 
 function resetReliquaryAffixValue(pos,index){
-    getReliquaryValueInputObj(pos,index).val(0);
+    var obj = getReliquaryValueInputObj(pos,index);
+    obj.val(0);
+    obj.attr("name",TYPE_RELIQUARY + propertyNameMap[getReliquarySelectObj(pos,index).val()]);
+    update();
 }
 
 function addReliquaryAffixValue(pos,index){
@@ -255,6 +289,7 @@ function addReliquaryAffixValue(pos,index){
         }
         getReliquaryValueInputObj(pos,index).val(values[targetNum]);
     }
+    update();
 }
 
 function subReliquaryAffixValue(pos,index){
@@ -273,6 +308,7 @@ function subReliquaryAffixValue(pos,index){
     if(i > 0){
         getReliquaryValueInputObj(pos,index).val(values[i - 1]);
     }
+    update();
 }
 
 function setReliquaryAffixValueByWheel(pos,index){
@@ -341,4 +377,21 @@ function setReliquaryCloseValue(pos,index){
     }
     i = iObj.data;
     getReliquaryValueInputObj(pos,index).val(values[i]);
+    update();
+}
+
+function getExtraSelectObj(index){
+    return $("#" + TYPE_EXTRA + "Name" + index);
+}
+
+function getExtraCalSelectObj(index){
+    return $("#" + TYPE_EXTRA + "CalName" + index);
+}
+
+function getExtraCalValueObj(index){
+    return $("#" + TYPE_EXTRA + "CalValue" + index);
+}
+
+function getExtraMaxValueObj(index){
+    return $("#" + TYPE_EXTRA + "MaxValue" + index);
 }

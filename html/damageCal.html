@@ -1,0 +1,127 @@
+{{ define "damageCalResult" -}}
+<span id="damageCalResult">
+    <table>
+        <tr>
+            <td align="center" colspan="2">
+                <span>==========[ 1.伤害区间 ]==========</span>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                伤害类型:
+            </td>
+            <td>
+                <select id="damageType">
+                    <option value=""></option>
+                    <option value="NormalAtk">普攻</option>
+                    <option value="HeavyAtk">重击</option>
+                    <option value="Skill">元素战技</option>
+                    <option value="Ult">元素爆发</option>
+                </select>
+                <select id="damageElementType">
+                    <option value=""></option>
+                    <option value="Physical">物伤</option>
+                    <option value="Ice">冰伤</option>
+                    <option value="Wind">风伤</option>
+                    <option value="Elec">雷伤</option>
+                    <option value="Rock">岩伤</option>
+                    <option value="Fire">火伤</option>
+                    <option value="Water">水伤</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                攻击倍率:
+            </td>
+            <td>
+                <input id="damageAttakRatio" value=0 />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                防御倍率:
+            </td>
+            <td>
+                <input id="damageDefenseRatio" value=0 />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                生命倍率:
+            </td>
+            <td>
+                <input id="damageHpRatio" value=0 />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                绝对伤害值:
+            </td>
+            <td>
+                <input id="damageAbsValue" readonly value=0 />
+            </td>
+        </tr>
+        <tr>
+            <td align="center" colspan="2">
+                <span>==========[ 2.暴击区间 ]==========</span>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                暴击率:
+            </td>
+            <td>
+                <input id="damageCritical" readonly value=0 />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                暴击伤害:
+            </td>
+            <td>
+                <input id="damageCriticalHurt" readonly value=0 />
+            </td>
+        </tr>
+        <tr>
+            <td align="center" colspan="2">
+                <span>==========[ 3.增伤区间 ]==========</span>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                增伤:
+            </td>
+            <td>
+                <input id="damageBoostHurt" readonly value=0 />
+            </td>
+        </tr>
+        <tr>
+            <td align="center" colspan="2">
+                <span>==========[ 4.减抗区间 ]==========</span>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                减抗:
+            </td>
+            <td>
+                <input id="damageElementSubHurt" readonly value=0 />
+            </td>
+        </tr>
+        <tr>
+            <td align="center" colspan="2">
+                <span>==========[ 5.防御区间 ]==========</span>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                防御:
+            </td>
+            <td>
+                <input id="damageDefenseSubHurt" readonly value=0 />
+            </td>
+        </tr>
+    </table>
+</span>
+{{- end }}
