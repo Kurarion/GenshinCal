@@ -96,7 +96,7 @@ function getData(types){
         var loopType = types[i];
         var loopData = createData(loopType);
         if(!loopData){
-            return;
+            continue;
         }
         !function(ajaxType, ajaxData){
             $.ajax({
@@ -188,8 +188,9 @@ function parseJSON(type, input){
     var obj = JSON.parse(input)
     switch (type){
         case TYPE_WEAPON_SKILL_AFFIX:
+            var patt = /<.*>/g;
             res += "特效名: " + obj.Name
-            res += "<br>特效: <br>" + obj.Desc
+            res += "\n特效: " + obj.Desc.replace(patt,"");
             break;
     }
     return res;
