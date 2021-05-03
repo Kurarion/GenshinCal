@@ -1,0 +1,112 @@
+{{ block "home" . }}
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>GenshinCal</title>
+        <meta charset="utf-8" />
+        <script src="./js/jquery-3.5.1.min.js"></script>
+        <script src="./js/func.js"></script>
+        <script src="./js/calFunc.js"></script>
+    </head>
+    <body onload="init(['reliquaryMain','reliquaryAffix'])">
+        <form>
+            <table>
+                <tr>
+                    <td align="center">
+                        <span ><font style="color:rgb(180, 65, 151)">角色</font></span>
+                    </td>
+                    <td align="center">
+                        <span id="weaponSkillAffixResult" href="#" title=""><font style="color:rgb(180, 65, 151)">武器</font></span>
+                    </td>
+                    <td align="center">
+                        <span ><font style="color:rgb(180, 65, 151)">圣遗物</font></span>
+                    </td>
+                    <td align="center">
+                        <span ><font style="color:rgb(180, 65, 151)">合计属性</font></span>
+                    </td>
+                    <td align="center">
+                        <span ><font style="color:rgb(180, 65, 151)">伤害</font></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center">
+                        {{template "characterSelect" .Avatar}}
+                    </td>
+                    <td align="center">
+                        {{template "weaponSelect" .Weapon}}
+                    </td>
+                    <td align="center" valign = "top" rowspan="2">
+                        {{template "reliquary" .GetReliquaryList}}
+                    </td>
+                    <td align="center">
+                        
+                    </td>
+                    <td align="center">
+                        
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center" valign = "top">
+                        {{template "characterResult" ""}}
+                    </td>
+                    <td align="center" valign = "top">
+                        {{template "weaponResult" ""}}
+                    </td>
+                    <td align="center" valign = "top">
+                        {{template "allResult" ""}}
+                    </td>
+                    <td align="center" valign = "top">
+                        {{template "damageCalResult" ""}}
+                    </td>
+                </tr>
+            </table>        
+        </form>
+        <form>
+            <table>
+                <tr>
+                    <td align="center">
+                        <span ><font style="color:rgb(180, 65, 151)">圣遗物套装效果</font></span>
+                    </td>
+                    <td align="center">
+                        <span ><font style="color:rgb(180, 65, 151)">其它</font></span>
+                    </td>
+                    <td align="center">
+                        <span ><font style="color:rgb(180, 65, 151)">怪物</font></span>
+                    </td>
+                    <td align="center">
+                        <span ><font style="color:rgb(180, 65, 151)">附加属性</font></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center">
+                        
+                    </td>
+                    <td align="center">
+                        
+                    </td>
+                    <td align="center">
+                        {{template "monsterSelect" .Monster}}
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center" valign = "top">
+                        {{template "reliquarySet" ""}}
+                    </td>
+                    <td align="center" valign = "top">
+                        {{template "other" ""}}
+                    </td>
+                    <td align="center" valign = "top">
+                        {{template "monsterResult" ""}}
+                        <br>
+                        <br>
+                        {{template "monsterDebuff" ""}}
+                    </td>
+                    <td align="center" valign = "top">
+                        {{template "extraProperty" ""}}
+                    </td>
+                </tr>
+            </table> 
+        </form>
+    </body>
+</html>
+{{ end }}

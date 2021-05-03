@@ -1,0 +1,92 @@
+{{define "monsterPropertyWindow" -}}
+<table id="{{.}}Property">
+    <tr>
+        <td>
+            <span>生命值: </span>
+        </td>
+        <td>
+            <input type="number" step="0.01"  id="{{.}}Hp" value=0 />
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <span>攻击值: </span>
+        </td>
+        <td>
+            <input type="number" step="0.01"  id="{{.}}Attack" value=0 />
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <span>防御值: </span>
+        </td>
+        <td>
+            <input type="number" step="0.01"  id="{{.}}Defense" value=0 />
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <span>冰抗: </span>
+        </td>
+        <td>
+            <input type="number" step="0.01"  id="{{.}}IceSubHurt" value=0 />
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <span>风抗: </span>
+        </td>
+        <td>
+            <input type="number" step="0.01"  id="{{.}}WindSubHurt" value=0 />
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <span>物抗: </span>
+        </td>
+        <td>
+            <input type="number" step="0.01"  id="{{.}}PhysicalSubHurt" value=0 />
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <span>雷抗: </span>
+        </td>
+        <td>
+            <input type="number" step="0.01"  id="{{.}}ElecSubHurt" value=0 />
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <span>岩抗: </span>
+        </td>
+        <td>
+            <input type="number" step="0.01"  id="{{.}}RockSubHurt" value=0 />
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <span>火抗: </span>
+        </td>
+        <td>
+            <input type="number" step="0.01"  id="{{.}}FireSubHurt" value=0 />
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <span>水抗: </span>
+        </td>
+        <td>
+            <input type="number" step="0.01"  id="{{.}}WaterSubHurt" value=0 />
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <span>草抗: </span>
+        </td>
+        <td>
+            <input type="number" step="0.01"  id="{{.}}GrassSubHurt" value=0 />
+        </td>
+    </tr>
+</table>
+{{- end}}

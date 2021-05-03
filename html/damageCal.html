@@ -1,0 +1,207 @@
+{{ define "damageCalResult" -}}
+<span id="damageCalResult">
+    <table>
+        <tr>
+            <td align="center" colspan="2">
+                <span>============[ 1.伤害区间 ]============</span>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                伤害类型:
+            </td>
+            <td>
+                <select id="damageType">
+                    <option value=""></option>
+                    <option value="NormalAtk">普攻</option>
+                    <option value="HeavyAtk">重击</option>
+                    <option value="Skill">元素战技</option>
+                    <option value="Ult">元素爆发</option>
+                </select>
+                <select id="damageElementType">
+                    <option value=""></option>
+                    <option value="Physical">物伤</option>
+                    <option value="Ice">冰伤</option>
+                    <option value="Wind">风伤</option>
+                    <option value="Elec">雷伤</option>
+                    <option value="Rock">岩伤</option>
+                    <option value="Fire">火伤</option>
+                    <option value="Water">水伤</option>
+                    <option value="Grass">草伤</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                攻击倍率:
+            </td>
+            <td>
+                <input id="damageAttakRatio" value=0 />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                防御倍率:
+            </td>
+            <td>
+                <input id="damageDefenseRatio" value=0 />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                生命倍率:
+            </td>
+            <td>
+                <input id="damageHpRatio" value=0 />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                绝对伤害值:
+            </td>
+            <td>
+                <input id="damageAbsValue" readonly style="color:gray" value=0 />
+            </td>
+        </tr>
+        <tr>
+            <td align="center" colspan="2">
+                <span>============[ 2.暴击区间 ]============</span>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                暴击率:
+            </td>
+            <td>
+                <input id="damageCritical" readonly style="color:gray" value=0 />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                暴击伤害:
+            </td>
+            <td>
+                <input id="damageCriticalHurt" readonly style="color:gray" value=0 />
+            </td>
+        </tr>
+        <tr>
+            <td align="center" colspan="2">
+                <span>============[ 3.增伤区间 ]============</span>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                增伤:
+            </td>
+            <td>
+                <input id="damageBoostHurt" readonly style="color:gray" value=0 />
+            </td>
+        </tr>
+        <tr>
+            <td align="center" colspan="2">
+                <span>============[ 4.减抗区间 ]============</span>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                减抗:
+            </td>
+            <td>
+                <input id="damageElementSubHurt" readonly style="color:gray" value=0 />
+            </td>
+        </tr>
+        <tr>
+            <td align="center" colspan="2">
+                <span>============[ 5.防御区间 ]============</span>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                防御:
+            </td>
+            <td>
+                <input id="damageDefenseSubHurt" readonly style="color:gray" value=0 />
+            </td>
+        </tr>
+        <tr>
+            <td align="center" colspan="2">
+                <!-- <span>===================================</span>
+                <br> -->
+                <span>===============[ 伤害 ]===============</span>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <font style="color:rgba(0, 132, 255)">非暴击:</font>
+            </td>
+            <td>
+                <input id="damageValueWithoutCri" readonly style="color:gray"  value=0 />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <font style="color:rgba(0, 132, 255)">暴击:</font>
+            </td>
+            <td>
+                <input id="damageValueWithCri" readonly style="color:gray"  value=0 />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <font style="color:rgba(0, 132, 255)">期望伤害:</font>
+            </td>
+            <td>
+                <input id="damageValueExpect" readonly style="color:gray"  value=0 />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <font style="color:rgb(140, 0, 255)">非暴击(反应1.5倍):</font>
+            </td>
+            <td>
+                <input id="damageValueWithoutCri15" readonly style="color:gray"  value=0 />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <font style="color:rgb(140, 0, 255)">暴击(反应1.5倍):</font>
+            </td>
+            <td>
+                <input id="damageValueWithCri15" readonly style="color:gray"  value=0 />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <font style="color:rgb(140, 0, 255)">期望伤害(反应1.5倍):</font>
+            </td>
+            <td>
+                <input id="damageValueExpect15" readonly style="color:gray"  value=0 />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <font style="color:rgb(255, 174, 0)">非暴击(反应2.0倍):</font>
+            </td>
+            <td>
+                <input id="damageValueWithoutCri20" readonly style="color:gray"  value=0 />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <font style="color:rgb(255, 174, 0)">暴击(反应2.0倍):</font>
+            </td>
+            <td>
+                <input id="damageValueWithCri20" readonly style="color:gray"  value=0 />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <font style="color:rgb(255, 174, 0)">期望伤害(反应2.0倍):</font>
+            </td>
+            <td>
+                <input id="damageValueExpect20" readonly style="color:gray"  value=0 />
+            </td>
+        </tr>
+    </table>
+</span>
+{{- end }}

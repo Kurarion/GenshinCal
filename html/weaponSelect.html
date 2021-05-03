@@ -1,0 +1,28 @@
+{{define "weaponSelect" -}}
+<select id="weaponTypeSelect" onchange="filterSelect(['weapon'])">
+    <option value=""></option>
+    {{with .GetWeaponTypeList -}}
+    {{range $i,$v := . -}}
+    <option value="{{$v}}">{{html $i}}</option>
+    {{- end}}
+    {{- end}}
+</select>
+<select id="weaponSelect" onchange="getData(['weapon','weaponSkillAffix'])">
+    <option value=""></option>
+    {{range . -}}
+    <option value="{{.Id}}" type="{{html .WeaponType}}">{{html .Name}}</option>
+    {{- end}}
+</select>
+<select id="weaponLevelSelect" onchange="getData(['weapon'])">
+    <option value=""></option>
+    {{range $i,$v := .GetLevelList -}}
+    <option value="{{$i}}">{{html $i}}</option>
+    {{- end}}
+</select>
+<select id="weaponSkillAffixSelect" onchange="getData(['weaponSkillAffix'])">
+    <option value=""></option>
+    {{range $i,$v := .GetSkillAffixLevelList -}}
+    <option value="{{$v}}">{{html $i}}</option>
+    {{- end}}
+</select>
+{{- end}}

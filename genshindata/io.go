@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"os"
 	"reflect"
-	"strconv"
+	"regexp"
 )
 
 //资源URL
@@ -22,13 +22,61 @@ var avatar map[uint64]*Avatar
 //角色名ID映射表
 var avatarNameMap map[string]uint64
 
+//武器
+var weapon map[uint64]*Weapon
+
+//武器名ID映射表
+var weaponNameMap map[string]uint64
+
+//圣遗物词条刻度
+var reliquaryAffixMap map[string][]float64
+
+//圣遗物主词条值
+var reliquaryMainMap map[string]float64
+
+//怪物
+var monster map[uint64]*Monster
+
+//怪物名ID映射表
+var monsterNameMap map[string]uint64
+
+//序列化列表
+var saveObjList map[string]interface{}
+
+//正则
+var regx []*regexp.Regexp
+var regxReplaceList []string
+
 //保存路径
 const savePath = "./data"
 const slash = "/"
-const fileName = "avatar_map.json"
+const avatarFileName = "avatar_map.json"
+const weaponFileName = "weapon_map.json"
+const reliquaryAffixFileName = "reliquary_affix_map.json"
+const reliquaryMainFileName = "reliquary_main_map.json"
+const monsterFileName = "monster_map.json"
 
 //文件完整路径
-const fileFullPath = savePath + slash + fileName
+const avatarFileFullPath = savePath + slash + avatarFileName
+const weaponFileFullPath = savePath + slash + weaponFileName
+const reliquaryAffixFileFullPath = savePath + slash + reliquaryAffixFileName
+const reliquaryMainFileFullPath = savePath + slash + reliquaryMainFileName
+const monsterFileFullPath = savePath + slash + monsterFileName
+
+//圣遗物词条depotID
+const artiDepotId = 501
+
+//圣遗物等级
+const artiLeveL = 21
+
+//武器最低星级
+const minWeaponRankLevel = 3
+
+//正则
+const regexColorToFront = `<color`
+const regexColorToFrontReplaced = `<font color`
+const regexColorToFrontSalsh = `</color`
+const regexColorToFrontSalshReplaced = `</font`
 
 //文件定义
 type fileType int
@@ -48,35 +96,86 @@ const defaultBuffSize = 15000
 
 //名
 const (
-	avatarExcelConfig        = "avatarExcelConfigData"
-	avatarCurveExcelConfig   = "avatarCurveExcelConfigData"
-	avatarPromoteExcelConfig = "avatarPromoteExcelConfigData"
-	textMapFile              = "textMapData"
+	avatarExcelConfig         = "avatarExcelConfigData"
+	avatarCurveExcelConfig    = "avatarCurveExcelConfigData"
+	avatarPromoteExcelConfig  = "avatarPromoteExcelConfigData"
+	weaponExcelConfig         = "weaponExcelConfigData"
+	weaponCurveExcelConfig    = "weaponCurveExcelConfigData"
+	weaponPromoteExcelConfig  = "weaponPromoteExcelConfigData"
+	equipAffixExcelConfig     = "EquipAffixExcelConfigData"
+	reliquaryAffixExcelConfig = "ReliquaryAffixExcelConfigData"
+	reliquaryLevelExcelConfig = "ReliquaryLevelExcelConfigData"
+	monsterExcelConfig        = "MonsterExcelConfigData"
+	monsterCurveExcelConfig   = "MonsterCurveExcelConfigData"
+	textMapFile               = "textMapData"
 )
 
 //级别
 const (
-	levelMin     = 1
-	levelMax     = 90
-	promotedMark = "+"
+	levelMin        = 1
+	levelMax        = 90
+	promotedMark    = "+"
+	MonsterLevelMin = 1
+	MonsterLevelMax = 100
 )
 
 func init() {
 	//下载URL初始化
 	downloadList = map[string]string{
-		avatarExcelConfig:        repositoryURL + avatarExcelConfigData,
-		avatarCurveExcelConfig:   repositoryURL + avatarCurveExcelConfigData,
-		avatarPromoteExcelConfig: repositoryURL + avatarPromoteExcelConfigData,
-		textMapFile:              repositoryURL + textMapData,
+		avatarExcelConfig:         repositoryURL + avatarExcelConfigData,
+		avatarCurveExcelConfig:    repositoryURL + avatarCurveExcelConfigData,
+		avatarPromoteExcelConfig:  repositoryURL + avatarPromoteExcelConfigData,
+		weaponExcelConfig:         repositoryURL + weaponExcelConfigData,
+		weaponCurveExcelConfig:    repositoryURL + weaponCurveExcelConfigData,
+		weaponPromoteExcelConfig:  repositoryURL + weaponPromoteExcelConfigData,
+		equipAffixExcelConfig:     repositoryURL + EquipAffixExcelConfigData,
+		reliquaryAffixExcelConfig: repositoryURL + ReliquaryAffixExcelConfigData,
+		reliquaryLevelExcelConfig: repositoryURL + ReliquaryLevelExcelConfigData,
+		monsterExcelConfig:        repositoryURL + MonsterExcelConfigData,
+		monsterCurveExcelConfig:   repositoryURL + MonsterCurveExcelConfigData,
+		textMapFile:               repositoryURL + textMapData,
 	}
 	//文件列表初始化
 	fileList = map[string]fileInfo{
-		"map_dir":    {path: savePath, class: dir},
-		"avatar_map": {path: fileFullPath, class: js},
+		"map_dir":             {path: savePath, class: dir},
+		"avatar_map":          {path: avatarFileFullPath, class: js},
+		"weapon_map":          {path: weaponFileFullPath, class: js},
+		"reliquary_affix_map": {path: reliquaryAffixFileFullPath, class: js},
+		"reliquary_main_map":  {path: reliquaryMainFileFullPath, class: js},
+		"monster_map":         {path: monsterFileFullPath, class: js},
+	}
+	saveObjList = map[string]interface{}{
+		avatarFileFullPath:         &avatar,
+		weaponFileFullPath:         &weapon,
+		reliquaryAffixFileFullPath: &reliquaryAffixMap,
+		reliquaryMainFileFullPath:  &reliquaryMainMap,
+		monsterFileFullPath:        &monster,
 	}
 	//角色对应初始化
 	avatar = make(map[uint64]*Avatar)
 	avatarNameMap = make(map[string]uint64)
+
+	//武器对应初始化
+	weapon = make(map[uint64]*Weapon)
+	weaponNameMap = make(map[string]uint64)
+
+	//圣遗物对应初始化
+	//圣遗物词条刻度
+	reliquaryAffixMap = make(map[string][]float64)
+	//圣遗物主词条值
+	reliquaryMainMap = make(map[string]float64)
+
+	//怪物对应初始化
+	monster = make(map[uint64]*Monster)
+	monsterNameMap = make(map[string]uint64)
+
+	//正则
+	regx = make([]*regexp.Regexp, 2, 2)
+	regx[0] = regexp.MustCompile(regexColorToFront)
+	regx[1] = regexp.MustCompile(regexColorToFrontSalsh)
+	regxReplaceList = make([]string, 2, 2)
+	regxReplaceList[0] = regexColorToFrontReplaced
+	regxReplaceList[1] = regexColorToFrontSalshReplaced
 
 	//初始化
 	initialize(false)
@@ -154,6 +253,26 @@ func initialize(forceUpdate bool) (err error) {
 		}
 	}
 
+	//武器名ID映射
+	for i, v := range weapon {
+		temp, ok := weaponNameMap[v.Name]
+		if !ok {
+			weaponNameMap[v.Name] = i
+		} else {
+			if len(v.Desc) > len(weapon[temp].Desc) {
+				weaponNameMap[v.Name] = i
+			}
+		}
+	}
+
+	//怪物名ID映射
+	for i, v := range monster {
+		_, ok := monsterNameMap[v.Name]
+		if !ok {
+			monsterNameMap[v.Name] = i
+		}
+	}
+
 	return
 }
 
@@ -191,40 +310,130 @@ func update() error {
 		content[i] = temp
 	}
 	//解析
+	//人物
 	avatarBaseDataList := make(avatarBaseListData, 0)
-	growCurvesDataList := make(growCurvesListData, 0)
-	promoteDataList := make(promoteListData, 0)
+	avatarGrowCurvesDataList := make(growCurvesListData, 0)
+	avatarPromoteDataList := make(promoteListData, 0)
+	//武器
+	weaponBaseDataList := make(weaponBaseListData, 0)
+	weaponGrowCurvesDataList := make(growCurvesListData, 0)
+	weaponPromoteDataList := make(promoteListData, 0)
+	weaponSkillAffixDataList := make(skillAffixListData, 0)
+	//圣遗物
+	reliquaryAffixDataList := make(reliquaryAffixListData, 0)
+	reliquaryMainDataList := make(reliquaryMainListData, 0)
+	//怪物
+	monsterBaseDataList := make(monsterBaseListData, 0)
+	monsterGrowCurvesDataList := make(growCurvesListData, 0)
+	//名
 	textMap := make(map[uint64]string)
 	for i, v := range content {
 		switch i {
 		case avatarExcelConfig:
 			json.Unmarshal(v.Bytes(), &avatarBaseDataList)
 		case avatarCurveExcelConfig:
-			json.Unmarshal(v.Bytes(), &growCurvesDataList)
+			json.Unmarshal(v.Bytes(), &avatarGrowCurvesDataList)
 		case avatarPromoteExcelConfig:
-			json.Unmarshal(v.Bytes(), &promoteDataList)
+			json.Unmarshal(v.Bytes(), &avatarPromoteDataList)
+		case weaponExcelConfig:
+			json.Unmarshal(v.Bytes(), &weaponBaseDataList)
+		case weaponCurveExcelConfig:
+			json.Unmarshal(v.Bytes(), &weaponGrowCurvesDataList)
+		case weaponPromoteExcelConfig:
+			json.Unmarshal(v.Bytes(), &weaponPromoteDataList)
+		case equipAffixExcelConfig:
+			json.Unmarshal(v.Bytes(), &weaponSkillAffixDataList)
+		case reliquaryAffixExcelConfig:
+			json.Unmarshal(v.Bytes(), &reliquaryAffixDataList)
+		case reliquaryLevelExcelConfig:
+			json.Unmarshal(v.Bytes(), &reliquaryMainDataList)
+		case monsterExcelConfig:
+			json.Unmarshal(v.Bytes(), &monsterBaseDataList)
+		case monsterCurveExcelConfig:
+			json.Unmarshal(v.Bytes(), &monsterGrowCurvesDataList)
 		case textMapFile:
 			json.Unmarshal(v.Bytes(), &textMap)
 		}
 	}
 	//数据处理
-	growCurvesDataMap := make(map[int]*growCurvesData)
-	promoteDataMap := make(map[uint64][]*promoteData)
-	for i := range growCurvesDataList {
-		growCurvesDataMap[growCurvesDataList[i].Level] = &growCurvesDataList[i]
+	//人物
+	avatarGrowCurvesDataMap := make(map[int]*growCurvesData)
+	avatarPromoteDataMap := make(map[uint64][]*promoteData)
+	for i := range avatarGrowCurvesDataList {
+		avatarGrowCurvesDataMap[avatarGrowCurvesDataList[i].Level] = &avatarGrowCurvesDataList[i]
 	}
-	CurvesIndexMap := make(map[string]int)
-	for i, v := range growCurvesDataMap[1].CurveInfos {
-		CurvesIndexMap[v.Type] = i
+	avatarCurvesIndexMap := make(map[string]int)
+	for i, v := range avatarGrowCurvesDataMap[1].CurveInfos {
+		avatarCurvesIndexMap[v.Type] = i
 	}
-	for i := range promoteDataList {
-		temp, ok := promoteDataMap[promoteDataList[i].AvatarPromoteId]
+	for i := range avatarPromoteDataList {
+		temp, ok := avatarPromoteDataMap[avatarPromoteDataList[i].AvatarPromoteId]
 		if !ok {
 			temp = make([]*promoteData, 0)
 		}
-		promoteDataMap[promoteDataList[i].AvatarPromoteId] = append(temp, &promoteDataList[i])
+		avatarPromoteDataMap[avatarPromoteDataList[i].AvatarPromoteId] = append(temp, &avatarPromoteDataList[i])
+	}
+	//武器
+	weaponGrowCurvesDataMap := make(map[int]*growCurvesData)
+	weaponPromoteDataMap := make(map[uint64][]*promoteData)
+	for i := range weaponGrowCurvesDataList {
+		weaponGrowCurvesDataMap[weaponGrowCurvesDataList[i].Level] = &weaponGrowCurvesDataList[i]
+	}
+	weaponCurvesIndexMap := make(map[string]int)
+	for i, v := range weaponGrowCurvesDataMap[1].CurveInfos {
+		weaponCurvesIndexMap[v.Type] = i
+	}
+	for i := range weaponPromoteDataList {
+		temp, ok := weaponPromoteDataMap[weaponPromoteDataList[i].WeaponPromoteId]
+		if !ok {
+			temp = make([]*promoteData, 0)
+		}
+		weaponPromoteDataMap[weaponPromoteDataList[i].WeaponPromoteId] = append(temp, &weaponPromoteDataList[i])
+	}
+	//特效
+	weaponSkillAffixDataMap := make(map[uint64]map[int]skillAffix)
+	for i := range weaponSkillAffixDataList {
+		_, ok := weaponSkillAffixDataMap[weaponSkillAffixDataList[i].Id]
+		if !ok {
+			weaponSkillAffixDataMap[weaponSkillAffixDataList[i].Id] = make(map[int]skillAffix)
+		}
+		weaponSkillAffixDataMap[weaponSkillAffixDataList[i].Id][weaponSkillAffixDataList[i].Level+1] =
+			skillAffix{
+				skillAffixData: weaponSkillAffixDataList[i],
+				Name:           textMap[weaponSkillAffixDataList[i].NameTextMapHash],
+				Desc:           htmlColorTag(textMap[weaponSkillAffixDataList[i].DescTextMapHash]),
+			}
+	}
+	//圣遗物
+	for i := range reliquaryAffixDataList {
+		if reliquaryAffixDataList[i].DepotId != artiDepotId {
+			continue
+		}
+		temp, have := reliquaryAffixMap[reliquaryAffixDataList[i].PropType]
+		if !have {
+			temp = make([]float64, 0)
+		}
+		reliquaryAffixMap[reliquaryAffixDataList[i].PropType] = append(temp, reliquaryAffixDataList[i].PropValue)
+	}
+	for i := len(reliquaryMainDataList) - 1; i >= 0; i-- {
+		if reliquaryMainDataList[i].Level == artiLeveL {
+			for ii := range reliquaryMainDataList[i].AddProps {
+				reliquaryMainMap[reliquaryMainDataList[i].AddProps[ii].PropType] = reliquaryMainDataList[i].AddProps[ii].Value
+			}
+			break
+		}
+	}
+	//怪物
+	monsterGrowCurvesDataMap := make(map[int]*growCurvesData)
+	for i := range monsterGrowCurvesDataList {
+		monsterGrowCurvesDataMap[monsterGrowCurvesDataList[i].Level] = &monsterGrowCurvesDataList[i]
+	}
+	monsterCurvesIndexMap := make(map[string]int)
+	for i, v := range monsterGrowCurvesDataMap[1].CurveInfos {
+		monsterCurvesIndexMap[v.Type] = i
 	}
 	//计算
+	//人物
 	for i := range avatarBaseDataList {
 		currentAvatarData := &avatarBaseDataList[i]
 		avatar[currentAvatarData.Id] = &Avatar{
@@ -244,11 +453,11 @@ func update() error {
 		for _, vv := range currentAvatarData.PropGrowCurves {
 			switch vv.Type {
 			case HP:
-				hpTypeIndex = CurvesIndexMap[vv.Value]
+				hpTypeIndex = avatarCurvesIndexMap[vv.Value]
 			case ATTACK:
-				attackTypeIndex = CurvesIndexMap[vv.Value]
+				attackTypeIndex = avatarCurvesIndexMap[vv.Value]
 			case DEFENSE:
-				defenseTypeIndex = CurvesIndexMap[vv.Value]
+				defenseTypeIndex = avatarCurvesIndexMap[vv.Value]
 			}
 		}
 		for ii := levelMin; ii <= levelMax; ii++ {
@@ -262,57 +471,18 @@ func update() error {
 			}
 			currentProperty.Level = ii
 			//此等级数值
-			currentProperty.Hp *= growCurvesDataMap[ii].CurveInfos[hpTypeIndex].Value
-			currentProperty.Attack *= growCurvesDataMap[ii].CurveInfos[attackTypeIndex].Value
-			currentProperty.Defense *= growCurvesDataMap[ii].CurveInfos[defenseTypeIndex].Value
+			currentProperty.Hp *= avatarGrowCurvesDataMap[ii].CurveInfos[hpTypeIndex].Value
+			currentProperty.Attack *= avatarGrowCurvesDataMap[ii].CurveInfos[attackTypeIndex].Value
+			currentProperty.Defense *= avatarGrowCurvesDataMap[ii].CurveInfos[defenseTypeIndex].Value
 
-			avatar[currentAvatarData.Id].LevelMap[strconv.Itoa(ii)] = currentProperty
+			avatar[currentAvatarData.Id].LevelMap[fmt.Sprintf("%02d", ii)] = currentProperty
 		}
 		//突破参数
-		list := promoteDataMap[currentAvatarData.AvatarPromoteId]
+		list := avatarPromoteDataMap[currentAvatarData.AvatarPromoteId]
 		var currentProperty *Property
 		var addPropNames []string = make([]string, 0)
 		for _, vv := range list[0].AddProps {
-			tempName := ""
-			switch vv.PropType {
-			case HP:
-				tempName = "Hp"
-			case ATTACK:
-				tempName = "Attack"
-			case DEFENSE:
-				tempName = "Defense"
-			case HP_PERCENT:
-				tempName = "Hp_percent"
-			case ATTACK_PERCENT:
-				tempName = "Attack_percent"
-			case DEFENSE_PERCENT:
-				tempName = "Defense_percent"
-			case CRITICAL:
-				tempName = "Critical"
-			case CRITICAL_HURT:
-				tempName = "CriticalHurt"
-			case ICE:
-				tempName = "Ice"
-			case WIND:
-				tempName = "Wind"
-			case PHYSICAL:
-				tempName = "Physical"
-			case ELEC:
-				tempName = "Elec"
-			case ROCK:
-				tempName = "Rock"
-			case FIRE:
-				tempName = "Fire"
-			case WATER:
-				tempName = "Water"
-			case CHANGE:
-				tempName = "ChargeEfficiency"
-			case ELEMENT_MASTER:
-				tempName = "ElementMaster"
-			case HEAL:
-				tempName = "HealActiveUp"
-
-			}
+			tempName := GetNameFromTypeCode(vv.PropType)
 			addPropNames = append(addPropNames, tempName)
 		}
 
@@ -322,11 +492,11 @@ func update() error {
 			unlockMaxLevel := currentPromote.UnlockMaxLevel
 
 			for iii := unlockMaxLevel; iii >= requiredLevel; iii-- {
-				currentProperty = avatar[currentAvatarData.Id].LevelMap[strconv.Itoa(iii)]
+				currentProperty = avatar[currentAvatarData.Id].LevelMap[fmt.Sprintf("%02d", iii)]
 				//突破界限
 				if iii == requiredLevel {
 					newCurrentProperty := &Property{}
-					avatar[currentAvatarData.Id].LevelMap[strconv.Itoa(iii)+promotedMark] = newCurrentProperty
+					avatar[currentAvatarData.Id].LevelMap[fmt.Sprintf("%02d", iii)+promotedMark] = newCurrentProperty
 					copyStruct(newCurrentProperty, currentProperty)
 					currentProperty = newCurrentProperty
 				}
@@ -336,6 +506,123 @@ func update() error {
 					temp.FieldByName(addPropNames[iiii]).SetFloat(temp.FieldByName(addPropNames[iiii]).Float() + currentPromote.AddProps[iiii].Value)
 				}
 			}
+		}
+	}
+	//武器
+	for i := range weaponBaseDataList {
+		currentWeaponData := &weaponBaseDataList[i]
+		if currentWeaponData.RankLevel < minWeaponRankLevel {
+			continue
+		}
+		weapon[currentWeaponData.Id] = &Weapon{
+			Id:              currentWeaponData.Id,
+			Name:            textMap[currentWeaponData.NameTextMapHash],
+			NameTextMapHash: currentWeaponData.NameTextMapHash,
+			Desc:            textMap[currentWeaponData.DescTextMapHash],
+			DescTextMapHash: currentWeaponData.DescTextMapHash,
+			IconName:        currentWeaponData.IconName,
+			WeaponType:      currentWeaponData.WeaponType,
+			SkillAffixMap:   weaponSkillAffixDataMap[currentWeaponData.SkillAffix[0]],
+			LevelMap:        make(map[string]*Property),
+		}
+		//级别曲线参数
+		var weaponBaseAtkIndex int
+		var weaponSubAffixIndex int
+		var weaponSubAffixName string
+		for _, vv := range currentWeaponData.PropGrowCurves {
+			switch vv.PropType {
+			case ATTACK:
+				weaponBaseAtkIndex = weaponCurvesIndexMap[vv.Type]
+			default:
+				weaponSubAffixName = GetNameFromTypeCode(vv.PropType)
+				weaponSubAffixIndex = weaponCurvesIndexMap[vv.Type]
+			}
+		}
+
+		for ii := levelMin; ii <= levelMax; ii++ {
+			currentProperty := &Property{
+				Attack: currentWeaponData.PropGrowCurves[0].InitValue,
+			}
+			currentProperty.Level = ii
+			//此等级数值
+			currentProperty.Attack *= weaponGrowCurvesDataMap[ii].CurveInfos[weaponBaseAtkIndex].Value
+			if len(weaponSubAffixName) != 0 {
+				temp := reflect.ValueOf(currentProperty).Elem()
+				temp.FieldByName(weaponSubAffixName).SetFloat(currentWeaponData.PropGrowCurves[1].InitValue * weaponGrowCurvesDataMap[ii].CurveInfos[weaponSubAffixIndex].Value)
+			}
+
+			weapon[currentWeaponData.Id].LevelMap[fmt.Sprintf("%02d", ii)] = currentProperty
+		}
+		//突破参数
+		list := weaponPromoteDataMap[currentWeaponData.WeaponPromoteId]
+		var currentProperty *Property
+		var addPropNames []string = make([]string, 0)
+		for _, vv := range list[0].AddProps {
+			tempName := GetNameFromTypeCode(vv.PropType)
+			addPropNames = append(addPropNames, tempName)
+		}
+
+		for ii := len(list) - 1; ii > 0; ii-- {
+			currentPromote := list[ii]
+			requiredLevel := list[ii-1].UnlockMaxLevel
+			unlockMaxLevel := currentPromote.UnlockMaxLevel
+
+			for iii := unlockMaxLevel; iii >= requiredLevel; iii-- {
+				currentProperty = weapon[currentWeaponData.Id].LevelMap[fmt.Sprintf("%02d", iii)]
+				//突破界限
+				if iii == requiredLevel {
+					newCurrentProperty := &Property{}
+					weapon[currentWeaponData.Id].LevelMap[fmt.Sprintf("%02d", iii)+promotedMark] = newCurrentProperty
+					copyStruct(newCurrentProperty, currentProperty)
+					currentProperty = newCurrentProperty
+				}
+				currentProperty.PromoteLevel += float64(currentPromote.PromoteLevel)
+				temp := reflect.ValueOf(currentProperty).Elem()
+				for iiii := range addPropNames {
+					temp.FieldByName(addPropNames[iiii]).SetFloat(temp.FieldByName(addPropNames[iiii]).Float() + currentPromote.AddProps[iiii].Value)
+				}
+			}
+		}
+	}
+	//怪物
+	for i := range monsterBaseDataList {
+		currentMonsterData := &monsterBaseDataList[i]
+		monster[currentMonsterData.Id] = &Monster{
+			Id:              currentMonsterData.Id,
+			Name:            textMap[currentMonsterData.NameTextMapHash],
+			NameTextMapHash: currentMonsterData.NameTextMapHash,
+			MonsterName:     currentMonsterData.MonsterName,
+			Type:            currentMonsterData.Type,
+			LevelMap:        make(map[string]*MonsterProperty),
+		}
+		//级别曲线参数
+		var hpTypeIndex int
+		var attackTypeIndex int
+		var defenseTypeIndex int
+		for _, vv := range currentMonsterData.PropGrowCurves {
+			switch vv.Type {
+			case HP:
+				hpTypeIndex = monsterCurvesIndexMap[vv.Value]
+			case ATTACK:
+				attackTypeIndex = monsterCurvesIndexMap[vv.Value]
+			case DEFENSE:
+				defenseTypeIndex = monsterCurvesIndexMap[vv.Value]
+			}
+		}
+		for ii := MonsterLevelMin; ii <= MonsterLevelMax; ii++ {
+			currentProperty := &MonsterProperty{
+				Hp:          currentMonsterData.HpBase,
+				Attack:      currentMonsterData.AttackBase,
+				Defense:     currentMonsterData.DefenseBase,
+				subHurtData: currentMonsterData.subHurtData,
+			}
+			currentProperty.Level = ii
+			//此等级数值
+			currentProperty.Hp *= monsterGrowCurvesDataMap[ii].CurveInfos[hpTypeIndex].Value
+			currentProperty.Attack *= monsterGrowCurvesDataMap[ii].CurveInfos[attackTypeIndex].Value
+			currentProperty.Defense *= monsterGrowCurvesDataMap[ii].CurveInfos[defenseTypeIndex].Value
+
+			monster[currentMonsterData.Id].LevelMap[fmt.Sprintf("%03d", ii)] = currentProperty
 		}
 	}
 	return nil
@@ -351,13 +638,27 @@ func copyStruct(dst, src interface{}) {
 	}
 }
 
+func htmlColorTag(origin string) string {
+	var res = origin
+	for i := range regx {
+		res = regx[i].ReplaceAllString(res, regxReplaceList[i])
+	}
+	return res
+}
+
 //结果保存至本地
 func saveResult() error {
-	content, err := json.Marshal(avatar)
-	if err != nil {
-		return err
+	for i := range saveObjList {
+		content, err := json.Marshal(saveObjList[i])
+		if err != nil {
+			return err
+		}
+		err = writeToFile(i, bytes.NewBuffer(content))
+		if err != nil {
+			return err
+		}
 	}
-	return writeToFile(fileFullPath, bytes.NewBuffer(content))
+	return nil
 }
 
 //获取最新数据
@@ -371,10 +672,16 @@ func getDataFromRepository() error {
 
 //从本地读取已往结果
 func readMapFormLocal() error {
-	content := bytes.NewBuffer(make([]byte, 0, defaultBuffSize))
-	err := readFromFile(fileFullPath, content)
-	if err != nil {
-		return err
+	for i := range saveObjList {
+		content := bytes.NewBuffer(make([]byte, 0, defaultBuffSize))
+		err := readFromFile(i, content)
+		if err != nil {
+			return err
+		}
+		err = json.Unmarshal(content.Bytes(), saveObjList[i])
+		if err != nil {
+			return err
+		}
 	}
-	return json.Unmarshal(content.Bytes(), &avatar)
+	return nil
 }

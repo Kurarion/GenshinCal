@@ -2,7 +2,7 @@
 ```go
 //人物定义
 AvatarExcelConfigData = GenshinData\ExcelBinOutput\AvatarExcelConfigData.json
-//人物基础升级提升值(累加)
+//人物基础升级提升值(对应)
 AvatarCurveExcelConfigData = GenshinData\ExcelBinOutput\AvatarCurveExcelConfigData.json
 //人物突破提升值(对应)
 AvatarPromoteExcelConfigData = GenshinData\ExcelBinOutput\AvatarPromoteExcelConfigData.json
@@ -45,7 +45,7 @@ for _,v := range AvatarExcelConfigData {
     v.SkillDepotId
 }
 
-//人物基础升级提升值(乘积)[1-100]
+//人物基础升级提升值(对应)[1-100]
 for _,v := range AvatarCurveExcelConfigData {
     //级别
     v.Level
@@ -112,4 +112,17 @@ for _,v := range AvatarSkillExcelConfigData {
     //能量消耗元素类型
     v.CostElemType
 }
+
+//武器定义
+WeaponExcelConfigData = GenshinData\ExcelBinOutput\WeaponExcelConfigData.json
+//武器基础升级提升值(对应)
+WeaponCurveExcelConfigData = GenshinData\ExcelBinOutput\WeaponCurveExcelConfigData.json
+//武器突破提升值(对应)
+WeaponPromoteExcelConfigData = GenshinData\ExcelBinOutput\WeaponPromoteExcelConfigData.json
+//武器特效
+EquipAffixExcelConfigData = GenshinData\ExcelBinOutput\EquipAffixExcelConfigData.json
+//圣遗物词条提升值
+ReliquaryAffixExcelConfigData = GenshinData\ExcelBinOutput\ReliquaryAffixExcelConfigData.json
+//圣遗物主词条值
+ReliquaryLevelExcelConfigData = GenshinData\ExcelBinOutput\ReliquaryLevelExcelConfigData.json
 ```
