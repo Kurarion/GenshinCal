@@ -327,6 +327,9 @@ function updateDamageReaction(){
 function calculate(){
     var val1 = getPropValueBaseByID(TYPE_DAMAGE, NAME_ABS_VALUE);
     var val2 = getPropValueBaseByID(TYPE_DAMAGE, PROP_CRITICAL);
+    if(val2 > 1){
+        val2 = 1;
+    }
     var val3 = 1 + getPropValueBaseByID(TYPE_DAMAGE, PROP_CRITICAL_HURT);
     var val4 = 1 + getPropValueBaseByID(TYPE_DAMAGE, NAME_BOOST_HURT);
     var val5 = 1 - getPropValueBaseByID(TYPE_DAMAGE, NAME_ELEMENT_SUB_HURT);
@@ -336,7 +339,7 @@ function calculate(){
 
     var temp1 = val1*val4*val5*val6;
     var temp2 = temp1*val3;
-    var temp3 = temp2*val2;
+    var temp3 = temp2*val2 + temp1*(1-val2);
     var temp4 = temp1*val7;
     var temp5 = temp2*val7;
     var temp6 = temp3*val7;

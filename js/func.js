@@ -274,11 +274,13 @@ function setReliquaryMainValue(pos,index){
     }
     var valueObj = getReliquaryMainValue(pos,index);
     var value = 0;
+    var obj = getReliquaryValueInputObj(pos,index);
     if(valueObj.error){
+        obj.val(value);
+        update();
         return
     }
     value = valueObj.data;
-    var obj = getReliquaryValueInputObj(pos,index);
     obj.val(value);
     obj.attr("name",TYPE_RELIQUARY + propertyNameMap[getReliquarySelectObj(pos,index).val()]);
     update();
