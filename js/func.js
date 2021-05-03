@@ -10,6 +10,8 @@ const TYPE_RELIQUARY_SET = "reliquarySet";
 const TYPE_OTHER = "other";
 const TYPE_EXTRA = "extra";
 const TYPE_ALL = "all";
+const TYPE_DAMAGE = "damage";
+const TYPE_MONSTER_DEBUFF = "monsterDebuff";
 var reliquaryMainObj = {}
 var reliquaryAffixObj = {}
 const reliquaryMainName = "Main"
@@ -21,6 +23,8 @@ var reliquaryAffixAllValue = {}
 var propertyNameMap = {}
 
 const MAX_EXTRA_NUM = 4
+
+var lockVars = {}
 
 function init(param){
     getData(param);
@@ -42,6 +46,21 @@ function init(param){
         "FIGHT_PROP_ROCK_ADD_HURT": PROP_BOOST_ROCK,
         "FIGHT_PROP_FIRE_ADD_HURT": PROP_BOOST_FIRE,
         "FIGHT_PROP_WATER_ADD_HURT": PROP_BOOST_WATER,
+        "FIGHT_PROP_GRASS_ADD_HURT": PROP_BOOST_GRASS,
+    }
+    $("input").change(update);
+    $("#" + TYPE_DAMAGE + NAME_TYPE).change(update);
+    $("#" + TYPE_DAMAGE + NAME_ELEMENT_TYPE).change(update);
+    $("span#extraProperty select").change(update);
+    var objs = $("input[id^=" + TYPE_ALL + "]");
+    objs.attr("readonly","readonly");
+    objs.attr("style","color:gray");
+    lockVars = {
+        "0": false,
+        "1": false,
+        "2": false,
+        "3": false,
+        "4": false,
     }
 }
 
@@ -250,6 +269,9 @@ function getReliquaryAffixValues(pos,index){
 }
 
 function setReliquaryMainValue(pos,index){
+    if(lockVars[pos]){
+        return;
+    }
     var valueObj = getReliquaryMainValue(pos,index);
     var value = 0;
     if(valueObj.error){
@@ -263,13 +285,19 @@ function setReliquaryMainValue(pos,index){
 }
 
 function resetReliquaryAffixValue(pos,index){
+    if(lockVars[pos]){
+        return;
+    }
     var obj = getReliquaryValueInputObj(pos,index);
     obj.val(0);
     obj.attr("name",TYPE_RELIQUARY + propertyNameMap[getReliquarySelectObj(pos,index).val()]);
     update();
 }
 
-function addReliquaryAffixValue(pos,index){
+function addReliquaryAffixValue(pos,index,step){
+    if(lockVars[pos]){
+        return;
+    }
     var valuesObj = getReliquaryAffixValues(pos,index);
     var values = [];
     if(valuesObj.error){
@@ -282,8 +310,12 @@ function addReliquaryAffixValue(pos,index){
         return
     }
     i = iObj.data;
+    var targetNum = 0;
+    targetNum = i + step;
+    if(targetNum >= values.length){
+        targetNum = values.length - 1;
+    }
     if(i < values.length - 1){
-        var targetNum = i + 1;
         if(iObj.isLower){
             targetNum = i;
         }
@@ -292,7 +324,10 @@ function addReliquaryAffixValue(pos,index){
     update();
 }
 
-function subReliquaryAffixValue(pos,index){
+function subReliquaryAffixValue(pos,index,step){
+    if(lockVars[pos]){
+        return;
+    }
     var valuesObj = getReliquaryAffixValues(pos,index);
     var values = [];
     if(valuesObj.error){
@@ -305,19 +340,27 @@ function subReliquaryAffixValue(pos,index){
         return
     }
     i = iObj.data;
+    var targetNum = 0;
+    targetNum = i - step;
+    if(targetNum < 0){
+        targetNum = 0;
+    }
     if(i > 0){
-        getReliquaryValueInputObj(pos,index).val(values[i - 1]);
+        getReliquaryValueInputObj(pos,index).val(values[targetNum]);
     }
     update();
 }
 
 function setReliquaryAffixValueByWheel(pos,index){
+    if(lockVars[pos]){
+        return;
+    }
     var e = window.event;
     var delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)));
     if(delta > 0){
-        addReliquaryAffixValue(pos,index);
+        addReliquaryAffixValue(pos,index,1);
     }else if (delta < 0){
-        subReliquaryAffixValue(pos,index);
+        subReliquaryAffixValue(pos,index,1);
     }
     return false;
 }
@@ -394,4 +437,16 @@ function getExtraCalValueObj(index){
 
 function getExtraMaxValueObj(index){
     return $("#" + TYPE_EXTRA + "MaxValue" + index);
+}
+
+function lockReliquary(pos){
+    var ele = $("#reliquaryLock" + pos);
+    var selects = $("div#reliquaryDiv" + pos +" select");
+    if(ele[0].checked){
+        lockVars[pos] = true;
+        selects.attr("disabled","disabled");
+    }else{
+        lockVars[pos] = false;
+        selects.removeAttr("disabled");
+    }
 }

@@ -19,16 +19,47 @@ const PROP_BOOST_ELEC = "Elec";
 const PROP_BOOST_ROCK = "Rock";
 const PROP_BOOST_FIRE = "Fire";
 const PROP_BOOST_WATER = "Water";
+const PROP_BOOST_GRASS = "Grass";
 const PROP_BOOST_ALL = "All";
 const PROP_BOOST_NORMALATK = "NormalAtk";
 const PROP_BOOST_HEAVYATK = "HeavyAtk";
 const PROP_BOOST_SKILL = "Skill";
 const PROP_BOOST_ULT = "Ult";
 
+const Reaction_Rate_1_5 = 1.5;
+const Reaction_Rate_2_0 = 2.0;
+
+const NAME_ATTAK_RATIO = "AttakRatio";
+const NAME_DEFENSE_RATIO = "DefenseRatio";
+const NAME_HP_RATIO = "HpRatio";
+const NAME_ABS_VALUE = "AbsValue";
+const NAME_BOOST_HURT = "BoostHurt";
+const NAME_SUB_HURT = "SubHurt";
+const NAME_ALL_SUB_HURT = "AllSubHurt";
+const NAME_ELEMENT_SUB_HURT = "ElementSubHurt";
+const NAME_DEFENSE_SUB_HURT = "DefenseSubHurt";
+const NAME_VALUE_WITHOUTCRI = "ValueWithoutCri";
+const NAME_VALUE_WITHCRI = "ValueWithCri";
+const NAME_VALUE_EXPECT = "ValueExpect";
+const NAME_1_5_RATIO = "15";
+const NAME_2_0_RATIO = "20";
+
+const NAME_TYPE = "Type";
+const NAME_ELEMENT_TYPE = "ElementType";
+
+var currentDamageType;
+var currentDamageElementType;
+var currentDamageReactionRate1_5;
+var currentDamageReactionRate2_0;
 
 //更新函数
 function update(){
     setToAll();
+    calDamage();
+}
+
+function getDamageInputObj(type){
+    return $("#" + TYPE_DAMAGE + type);
 }
 
 function getAllInputObj(type){
@@ -195,6 +226,7 @@ function setToAll(){
     setAllInputObjGeneral(PROP_BOOST_ROCK);
     setAllInputObjGeneral(PROP_BOOST_FIRE);
     setAllInputObjGeneral(PROP_BOOST_WATER);
+    setAllInputObjGeneral(PROP_BOOST_GRASS);
     setAllInputObjGeneral(PROP_BOOST_ALL);
     setAllInputObjGeneral(PROP_BOOST_NORMALATK);
     setAllInputObjGeneral(PROP_BOOST_HEAVYATK);
@@ -210,5 +242,115 @@ function setToAll(){
 //================================
 
 function calDamage(){
-    
+    currentDamageType = getDamageInputObj(NAME_TYPE).val();
+    currentDamageElementType = getDamageInputObj(NAME_ELEMENT_TYPE).val();
+
+    if(currentDamageType.length !=0 && currentDamageElementType !=0){
+        //1.伤害值
+        updateDamageOriginValue();
+        //2.暴击区间
+        updateDamageCritiacl();
+        //3.增伤区间
+        updateDamageBoostDamage();
+        //4.减抗区间
+        updateDamageDebuffEle();
+        //5.防御区间
+        updateDamageDefense();
+        //6.反应区间
+        updateDamageReaction();
+        //计算
+        calculate();
+    }
+}
+
+//伤害值
+function updateDamageOriginValue(){
+    var attackRatio = getPropValueBaseByID(TYPE_DAMAGE, NAME_ATTAK_RATIO);
+    var defenseRatio = getPropValueBaseByID(TYPE_DAMAGE, NAME_DEFENSE_RATIO);
+    var hpRatio = getPropValueBaseByID(TYPE_DAMAGE, NAME_HP_RATIO);
+    var absObj = getDamageInputObj(NAME_ABS_VALUE);
+    var value = getPropValueBaseByID(TYPE_ALL,PROP_ATTACK)*attackRatio + getPropValueBaseByID(TYPE_ALL,PROP_DEFENSE)*defenseRatio + getPropValueBaseByID(TYPE_ALL,PROP_HP)*hpRatio;
+    absObj.val(value);
+}
+
+//暴击区间
+function updateDamageCritiacl(){
+    getDamageInputObj(PROP_CRITICAL).val(getAllInputObj(PROP_CRITICAL).val());
+    getDamageInputObj(PROP_CRITICAL_HURT).val(getAllInputObj(PROP_CRITICAL_HURT).val());
+}
+
+//增伤区间
+function updateDamageBoostDamage(){
+    var value = 0;
+    value += getPropValueBaseByID(TYPE_ALL, currentDamageType);
+    value += getPropValueBaseByID(TYPE_ALL, currentDamageElementType);
+    value += getPropValueBaseByID(TYPE_ALL, PROP_BOOST_ALL);
+    getDamageInputObj(NAME_BOOST_HURT).val(value);
+}
+
+//减抗区间
+function updateDamageDebuffEle(){
+    var value = 0;
+    value += getPropValueBaseByID(TYPE_MONSTER, currentDamageElementType + NAME_SUB_HURT);
+    value -= getPropValueBaseByID(TYPE_MONSTER_DEBUFF, currentDamageElementType + NAME_SUB_HURT);
+    value -= getPropValueBaseByID(TYPE_MONSTER_DEBUFF, NAME_ALL_SUB_HURT);
+    if(value < 0){
+        value /= 2;
+    }
+    getDamageInputObj(NAME_ELEMENT_SUB_HURT).val(value);
+}
+
+//防御区间
+function updateDamageDefense(){
+    var value = 0;
+    // [ref] https://bbs.nga.cn/read.php?tid=23708327
+    // Def_c/(Def_c+5l+500)
+    var monsterDef = 0;
+    monsterDef += getPropValueBaseByID(TYPE_MONSTER, PROP_DEFENSE);
+    monsterDef *= 1 - getPropValueBaseByID(TYPE_MONSTER_DEBUFF, PROP_DEFENSE);
+    var characterLevel = 0;
+    characterLevel = parseInt($("#characterLevelSelect").val());
+    value = monsterDef/(monsterDef + characterLevel*5 + 500);
+    getDamageInputObj(NAME_DEFENSE_SUB_HURT).val(value);
+}
+
+//反应区间
+function updateDamageReaction(){
+    // [ref] https://bbs.nga.cn/read.php?tid=26143970#postauthor5
+    var ele = getPropValueBaseByID(TYPE_ALL, PROP_ELEMENT_MASTERY);
+    var temp = 2.78/(1 + 1400/ele);
+    currentDamageReactionRate1_5 = Reaction_Rate_1_5 + temp;
+    currentDamageReactionRate2_0 = Reaction_Rate_2_0 + temp;
+}
+
+//最终计算
+function calculate(){
+    var val1 = getPropValueBaseByID(TYPE_DAMAGE, NAME_ABS_VALUE);
+    var val2 = getPropValueBaseByID(TYPE_DAMAGE, PROP_CRITICAL);
+    var val3 = 1 + getPropValueBaseByID(TYPE_DAMAGE, PROP_CRITICAL_HURT);
+    var val4 = 1 + getPropValueBaseByID(TYPE_DAMAGE, NAME_BOOST_HURT);
+    var val5 = 1 - getPropValueBaseByID(TYPE_DAMAGE, NAME_ELEMENT_SUB_HURT);
+    var val6 = 1 - getPropValueBaseByID(TYPE_DAMAGE, NAME_DEFENSE_SUB_HURT);
+    var val7 = currentDamageReactionRate1_5;
+    var val8 = currentDamageReactionRate2_0;
+
+    var temp1 = val1*val4*val5*val6;
+    var temp2 = temp1*val3;
+    var temp3 = temp2*val2;
+    var temp4 = temp1*val7;
+    var temp5 = temp2*val7;
+    var temp6 = temp3*val7;
+    var temp7 = temp1*val8;
+    var temp8 = temp2*val8;
+    var temp9 = temp3*val8;
+
+    getDamageInputObj(NAME_VALUE_WITHOUTCRI).val(temp1);
+    getDamageInputObj(NAME_VALUE_WITHCRI).val(temp2);
+    getDamageInputObj(NAME_VALUE_EXPECT).val(temp3);
+    getDamageInputObj(NAME_VALUE_WITHOUTCRI + NAME_1_5_RATIO).val(temp4);
+    getDamageInputObj(NAME_VALUE_WITHCRI + NAME_1_5_RATIO).val(temp5);
+    getDamageInputObj(NAME_VALUE_EXPECT + NAME_1_5_RATIO).val(temp6);
+    getDamageInputObj(NAME_VALUE_WITHOUTCRI + NAME_2_0_RATIO).val(temp7);
+    getDamageInputObj(NAME_VALUE_WITHCRI + NAME_2_0_RATIO).val(temp8);
+    getDamageInputObj(NAME_VALUE_EXPECT + NAME_2_0_RATIO).val(temp9);
 }

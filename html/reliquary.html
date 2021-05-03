@@ -1,6 +1,7 @@
 {{ define "reliquary" -}}
 {{range $pos,$val := . -}}
 <span>{{$pos}}号</span>
+[<input id="reliquaryLock{{$pos}}" type="checkbox" onchange="lockReliquary('{{$pos}}');" />]
 <div id="reliquaryDiv{{$pos}}" onchange=";">
     {{range $i,$v := . -}}
     {{range $ii,$vv := $v -}}
@@ -11,10 +12,10 @@
     <option value="{{index $v 1}}" propName="{{index $v 0}}">{{index $v 2 | html}}</option>
     {{- end}}
     </select>
-    <input type="number" step="0.01"  id="reliquary{{$pos}}{{$ii}}Value" {{if not $isMain}}onchange="setReliquaryCloseValue('{{$pos}}','{{$ii}}');" onwheel="setReliquaryAffixValueByWheel('{{$pos}}','{{$ii}}');" {{end}} value=0 readonly />
+    <input type="number" step="0.01"  id="reliquary{{$pos}}{{$ii}}Value" {{if not $isMain}}onchange="setReliquaryCloseValue('{{$pos}}','{{$ii}}');" onwheel="setReliquaryAffixValueByWheel('{{$pos}}','{{$ii}}');return false;" {{end}} value=0 readonly style="color:gray" />
     {{if not $isMain -}}
-    <input type="button" value="+" onclick="addReliquaryAffixValue('{{$pos}}','{{$ii}}');">
-    <input type="button" value="-" onclick="subReliquaryAffixValue('{{$pos}}','{{$ii}}');">
+    <input type="button" value="+" onclick="addReliquaryAffixValue('{{$pos}}','{{$ii}}',10);">
+    <input type="button" value="-" onclick="subReliquaryAffixValue('{{$pos}}','{{$ii}}',10);">
     {{- end}}
     <br>
     {{- end}}

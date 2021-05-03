@@ -138,6 +138,8 @@ func GetNameFromTypeCode(code string) string {
 		name = "Fire"
 	case WATER:
 		name = "Water"
+	case GRASS:
+		name = "Grass"
 	case CHANGE:
 		name = "ChargeEfficiency"
 	case ELEMENT_MASTER:

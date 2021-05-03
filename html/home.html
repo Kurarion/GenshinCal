@@ -13,22 +13,19 @@
             <table>
                 <tr>
                     <td align="center">
-                        <span >角色</span>
+                        <span ><font style="color:rgb(180, 65, 151)">角色</font></span>
                     </td>
                     <td align="center">
-                        <span id="weaponSkillAffixResult" href="#" title="">武器</span>
+                        <span id="weaponSkillAffixResult" href="#" title=""><font style="color:rgb(180, 65, 151)">武器</font></span>
                     </td>
                     <td align="center">
-                        <span >圣遗物</span>
+                        <span ><font style="color:rgb(180, 65, 151)">圣遗物</font></span>
                     </td>
                     <td align="center">
-                        <span >圣遗物套装效果</span>
+                        <span ><font style="color:rgb(180, 65, 151)">合计属性</font></span>
                     </td>
                     <td align="center">
-                        <span >其它</span>
-                    </td>
-                    <td align="center">
-                        <span >怪物</span>
+                        <span ><font style="color:rgb(180, 65, 151)">伤害</font></span>
                     </td>
                 </tr>
                 <tr>
@@ -47,9 +44,6 @@
                     <td align="center">
                         
                     </td>
-                    <td align="center">
-                        {{template "monsterSelect" .Monster}}
-                    </td>
                 </tr>
                 <tr>
                     <td align="center" valign = "top">
@@ -58,6 +52,43 @@
                     <td align="center" valign = "top">
                         {{template "weaponResult" ""}}
                     </td>
+                    <td align="center" valign = "top">
+                        {{template "allResult" ""}}
+                    </td>
+                    <td align="center" valign = "top">
+                        {{template "damageCalResult" ""}}
+                    </td>
+                </tr>
+            </table>        
+        </form>
+        <form>
+            <table>
+                <tr>
+                    <td align="center">
+                        <span ><font style="color:rgb(180, 65, 151)">圣遗物套装效果</font></span>
+                    </td>
+                    <td align="center">
+                        <span ><font style="color:rgb(180, 65, 151)">其它</font></span>
+                    </td>
+                    <td align="center">
+                        <span ><font style="color:rgb(180, 65, 151)">怪物</font></span>
+                    </td>
+                    <td align="center">
+                        <span ><font style="color:rgb(180, 65, 151)">附加属性</font></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center">
+                        
+                    </td>
+                    <td align="center">
+                        
+                    </td>
+                    <td align="center">
+                        {{template "monsterSelect" .Monster}}
+                    </td>
+                </tr>
+                <tr>
                     <td align="center" valign = "top">
                         {{template "reliquarySet" ""}}
                     </td>
@@ -68,36 +99,10 @@
                         {{template "monsterResult" ""}}
                         <br>
                         <br>
-                        <br>
-                        <span >附加属性</span>
-                        <br>
-                        {{template "extraProperty" ""}}
-                    </td>
-                </tr>
-            </table>        
-        </form>
-        <form>
-            <table>
-                <tr>
-                    <!-- <td align="center">
-                        <span >附加属性</span>
-                    </td> -->
-                    <td align="center">
-                        <span >合计属性</span>
-                    </td>
-                    <td align="center">
-                        <span >伤害</span>
-                    </td>
-                </tr>
-                <tr>
-                    <!-- <td align="center" valign = "top">
-                        {{template "extraProperty" ""}}
-                    </td> -->
-                    <td align="center" valign = "top">
-                        {{template "allResult" ""}}
+                        {{template "monsterDebuff" ""}}
                     </td>
                     <td align="center" valign = "top">
-                        {{template "damageCalResult" ""}}
+                        {{template "extraProperty" ""}}
                     </td>
                 </tr>
             </table> 

@@ -37,6 +37,7 @@ type ElementsAddHurt struct {
 	Rock      float64 `json:"Rock"`
 	Fire      float64 `json:"Fire"`
 	Water     float64 `json:"Water"`
+	Grass     float64 `json:"Grass"`
 	All       float64 `json:"All"`
 	NormalAtk float64 `json:"NormalAtk"`
 	HeavyAtk  float64 `json:"HeavyAtk"`
