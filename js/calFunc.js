@@ -319,8 +319,8 @@ function updateDamageReaction(){
     // [ref] https://bbs.nga.cn/read.php?tid=26143970#postauthor5
     var ele = getPropValueBaseByID(TYPE_ALL, PROP_ELEMENT_MASTERY);
     var temp = 2.78/(1 + 1400/ele);
-    currentDamageReactionRate1_5 = Reaction_Rate_1_5 + temp;
-    currentDamageReactionRate2_0 = Reaction_Rate_2_0 + temp;
+    currentDamageReactionRate1_5 = Reaction_Rate_1_5 * (1 + temp);
+    currentDamageReactionRate2_0 = Reaction_Rate_2_0 * (1 + temp);
 }
 
 //最终计算
