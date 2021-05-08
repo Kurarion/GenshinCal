@@ -12,6 +12,8 @@ const TYPE_EXTRA = "extra";
 const TYPE_ALL = "all";
 const TYPE_DAMAGE = "damage";
 const TYPE_MONSTER_DEBUFF = "monsterDebuff";
+const TYPE_OPTIMAL = "optimal";
+const TYPE_OPTIMAL_RELIQUARY = "optimalReliquary";
 var reliquaryMainObj = {}
 var reliquaryAffixObj = {}
 const reliquaryMainName = "Main"
@@ -48,11 +50,11 @@ function init(param){
         "FIGHT_PROP_WATER_ADD_HURT": PROP_BOOST_WATER,
         "FIGHT_PROP_GRASS_ADD_HURT": PROP_BOOST_GRASS,
     }
-    $("input").change(update);
-    $("#" + TYPE_DAMAGE + NAME_TYPE).change(update);
-    $("#" + TYPE_DAMAGE + NAME_ELEMENT_TYPE).change(update);
+    $("input").not("input[id^=" + TYPE_OPTIMAL + "]").change(update);
+    $("select#" + TYPE_DAMAGE + NAME_TYPE).change(update);
+    $("select#" + TYPE_DAMAGE + NAME_ELEMENT_TYPE).change(update);
     $("span#extraProperty select").change(update);
-    var objs = $("input[id^=" + TYPE_ALL + "]");
+    var objs = $("input[id^=" + TYPE_ALL + "], input[id^=" + TYPE_OPTIMAL + "], input[name^=" + TYPE_OPTIMAL_RELIQUARY + "]");
     objs.attr("readonly","readonly");
     objs.attr("style","color:gray");
     lockVars = {
@@ -62,6 +64,14 @@ function init(param){
         "3": false,
         "4": false,
     }
+    var optimalValidObj = $("input#" + TYPE_OPTIMAL + "ValidNum");
+    var optimalCriMaxObj = $("input#" + TYPE_OPTIMAL + "CriMax");
+    optimalValidObj.attr("min",MinValid);
+    optimalValidObj.attr("max",MaxValid);
+    setOptimalValidNum(MaxValid);
+    optimalCriMaxObj.attr("min",0.05);
+    optimalCriMaxObj.attr("max",1.0);
+    setOptimalCriMax(1.0);
 }
 
 function initAllAffixValue(){
@@ -170,6 +180,7 @@ function createCallback(type) {
             func = function(result){
                 reliquaryAffixObj = JSON.parse(result);
                 initAllAffixValue();
+                initOptimalStep();
             }
             break;
     }

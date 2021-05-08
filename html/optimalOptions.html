@@ -1,0 +1,127 @@
+{{ define "optimalOptions" -}}
+<span id="optimalOptions">
+    <table>
+        <tr>
+            <td>
+                最优计算模式:
+            </td>
+            <td>
+                [ <input id="optimalSwitch" type="checkbox" onchange="changeCalMode();" /> ]
+            </td>
+        </tr>
+        <tr>
+            <td>
+                最优程度:
+            </td>
+            <td>
+                <input type="range" step="1" id="optimalValidNum" onchange="setOptimalValidNum();" onwheel="setOptimalValidNumByWheel();return false;" size="5"/>
+                <input id="optimalValidNumShow" size="1" />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                [圣遗物词条]
+            </td>
+            <td>
+                
+            </td>
+        </tr>
+        {{range $pos,$val := . -}}
+        <tr>
+            <td>{{$pos}}号主词条</td>
+            <td>
+                {{$v1 := index . 0 -}}
+                {{$v2 := index $v1 "Main" -}}
+                <select id="optimalReliquary{{$pos}}Main" onchange="setOptimalMainValue('{{$pos}}','Main');">
+                <option value=""></option>
+                {{range $i,$v := $v2 -}}
+                <option value="{{index $v 1}}" propName="{{index $v 0}}">{{index $v 2 | html}}</option>
+                {{- end}}
+                </select>
+                <input type="hidden" id="optimalReliquary{{$pos}}MainValue" />
+            </td>
+        </tr>
+        {{- end}}
+        <tr>
+            <td>
+                生命百分比:
+            </td>
+            <td>
+                <input type="number" step="0.01" optimal="true" name="optimalReliquaryHp_percent" value=0 />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                攻击百分比:
+            </td>
+            <td>
+                <input type="number" step="0.01" optimal="true" name="optimalReliquaryAttack_percent" value=0 />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                防御百分比:
+            </td>
+            <td>
+                <input type="number" step="0.01" optimal="true" name="optimalReliquaryDefense_percent" value=0 />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                暴击率:
+            </td>
+            <td>
+                <input type="number" step="0.01" optimal="true" name="optimalReliquaryCritical" value=0 />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                暴击伤害:
+            </td>
+            <td>
+                <input type="number" step="0.01" optimal="true" name="optimalReliquaryCriticalHurt" value=0 />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                元素精通:
+            </td>
+            <td>
+                <input type="number" step="0.01" optimal="true" name="optimalReliquaryElementMaster" value=0 />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                暴击率上限:
+            </td>
+            <td>
+                <input type="range" step="0.01" id="optimalCriMax" onchange="setOptimalCriMax();" onwheel="setOptimalCriMaxByWheel();return false;" size="5" />
+                <input id="optimalCriMaxShow" size="1" />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                最优目标伤害:
+            </td>
+            <td>
+                <select id="optimalTargetDamageType">
+                    <option value="damageValueWithoutCri">非暴击</option>
+                    <option value="damageValueWithCri">暴击</option>
+                    <option value="damageValueExpect" selected>期望伤害</option>
+                    <option value="damageValueWithoutCri15">非暴击(反应1.5倍)</option>
+                    <option value="damageValueWithCri15">暴击(反应1.5倍)</option>
+                    <option value="damageValueExpect15">期望伤害(反应1.5倍)</option>
+                    <option value="damageValueWithoutCri20">非暴击(反应2.0倍)</option>
+                    <option value="damageValueWithCri20">暴击(反应2.0倍)</option>
+                    <option value="damageValueExpect20">期望伤害(反应2.0倍)</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" align="center">
+                <input type="button" style="width:100%" value=" 计 算 " onclick="optimalCal();" />
+            </td>
+        </tr>
+    </table>
+</span>
+{{- end }}

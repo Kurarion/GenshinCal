@@ -229,11 +229,11 @@ func initialize(forceUpdate bool) (err error) {
 	}
 	if forceUpdate || !hasLocalData {
 		//更新
-		fmt.Println("[获取最新数据]")
+		fmt.Println("Getting the latest data...")
 		err = getDataFromRepository()
 	} else {
 		//读取
-		fmt.Println("[读取已经有数据]")
+		fmt.Println("Reading existing data...")
 		err = readMapFormLocal()
 	}
 

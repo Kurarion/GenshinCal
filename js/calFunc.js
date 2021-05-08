@@ -52,8 +52,22 @@ var currentDamageElementType;
 var currentDamageReactionRate1_5;
 var currentDamageReactionRate2_0;
 
+var currentAllType = TYPE_ALL;
+var currentReliquaryType = TYPE_RELIQUARY;
+
+function checkOptimal(){
+    if(isOptimalMode && hadOptimalCal){
+        alert("已完成过最优模式计算，请再次计算以反映\n或关闭最优计算模式以返回正常计算");
+        return false;
+    }
+    return true;
+}
+
 //更新函数
 function update(){
+    if(!checkOptimal()){
+        return;
+    }
     setToAll();
     calDamage();
 }
@@ -63,7 +77,7 @@ function getDamageInputObj(type){
 }
 
 function getAllInputObj(type){
-    return $("#" + TYPE_ALL + type);
+    return $("#" + currentAllType + type);
 }
 
 function setAllInputObjGeneral(type){
@@ -123,7 +137,7 @@ function getAllPropValue(typeName){
     var val = 0;
     val += getPropValueBaseByID(TYPE_CHARACTER, typeName);
     val += getPropValueBaseByID(TYPE_WEAPON, typeName);
-    val += getPropValueBaseByName(TYPE_RELIQUARY, typeName);
+    val += getPropValueBaseByName(currentReliquaryType, typeName);
     val += getPropValueBaseByID(TYPE_RELIQUARY_SET, typeName);
     val += getPropValueBaseByID(TYPE_OTHER, typeName);
     return val;
@@ -139,7 +153,7 @@ function getAtk(buffPercent){
     //攻击值
     var absVal = 0;
     //基础攻击
-    absVal += getPropValueBaseByName(TYPE_RELIQUARY, PROP_ATTACK);
+    absVal += getPropValueBaseByName(currentReliquaryType, PROP_ATTACK);
     absVal += getPropValueBaseByID(TYPE_RELIQUARY_SET, PROP_ATTACK);
     absVal += getPropValueBaseByID(TYPE_OTHER, PROP_ATTACK);
     //总攻击
@@ -156,7 +170,7 @@ function getDefense(buffPercent){
     }
     //防御值
     var absVal = 0;
-    absVal += getPropValueBaseByName(TYPE_RELIQUARY, PROP_DEFENSE);
+    absVal += getPropValueBaseByName(currentReliquaryType, PROP_DEFENSE);
     absVal += getPropValueBaseByID(TYPE_RELIQUARY_SET, PROP_DEFENSE);
     absVal += getPropValueBaseByID(TYPE_OTHER, PROP_DEFENSE);
     //总防御
@@ -173,7 +187,7 @@ function getHp(buffPercent){
     }
     //生命值
     var absVal = 0;
-    absVal += getPropValueBaseByName(TYPE_RELIQUARY, PROP_HP);
+    absVal += getPropValueBaseByName(currentReliquaryType, PROP_HP);
     absVal += getPropValueBaseByID(TYPE_RELIQUARY_SET, PROP_HP);
     absVal += getPropValueBaseByID(TYPE_OTHER, PROP_HP);
     //总生命
@@ -269,7 +283,7 @@ function updateDamageOriginValue(){
     var defenseRatio = getPropValueBaseByID(TYPE_DAMAGE, NAME_DEFENSE_RATIO);
     var hpRatio = getPropValueBaseByID(TYPE_DAMAGE, NAME_HP_RATIO);
     var absObj = getDamageInputObj(NAME_ABS_VALUE);
-    var value = getPropValueBaseByID(TYPE_ALL,PROP_ATTACK)*attackRatio + getPropValueBaseByID(TYPE_ALL,PROP_DEFENSE)*defenseRatio + getPropValueBaseByID(TYPE_ALL,PROP_HP)*hpRatio;
+    var value = getPropValueBaseByID(currentAllType,PROP_ATTACK)*attackRatio + getPropValueBaseByID(currentAllType,PROP_DEFENSE)*defenseRatio + getPropValueBaseByID(currentAllType,PROP_HP)*hpRatio;
     absObj.val(value);
 }
 
@@ -282,9 +296,9 @@ function updateDamageCritiacl(){
 //增伤区间
 function updateDamageBoostDamage(){
     var value = 0;
-    value += getPropValueBaseByID(TYPE_ALL, currentDamageType);
-    value += getPropValueBaseByID(TYPE_ALL, currentDamageElementType);
-    value += getPropValueBaseByID(TYPE_ALL, PROP_BOOST_ALL);
+    value += getPropValueBaseByID(currentAllType, currentDamageType);
+    value += getPropValueBaseByID(currentAllType, currentDamageElementType);
+    value += getPropValueBaseByID(currentAllType, PROP_BOOST_ALL);
     getDamageInputObj(NAME_BOOST_HURT).val(value);
 }
 
@@ -317,7 +331,7 @@ function updateDamageDefense(){
 //反应区间
 function updateDamageReaction(){
     // [ref] https://bbs.nga.cn/read.php?tid=26143970#postauthor5
-    var ele = getPropValueBaseByID(TYPE_ALL, PROP_ELEMENT_MASTERY);
+    var ele = getPropValueBaseByID(currentAllType, PROP_ELEMENT_MASTERY);
     var temp = 2.78/(1 + 1400/ele);
     currentDamageReactionRate1_5 = Reaction_Rate_1_5 * (1 + temp);
     currentDamageReactionRate2_0 = Reaction_Rate_2_0 * (1 + temp);

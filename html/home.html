@@ -7,6 +7,7 @@
         <script src="./js/jquery-3.5.1.min.js"></script>
         <script src="./js/func.js"></script>
         <script src="./js/calFunc.js"></script>
+        <script src="./js/optimalFunc.js"></script>
     </head>
     <body onload="init(['reliquaryMain','reliquaryAffix'])">
         <form>
@@ -76,6 +77,9 @@
                     <td align="center">
                         <span ><font style="color:rgb(180, 65, 151)">附加属性</font></span>
                     </td>
+                    <td align="center">
+                        <span ><font style="color:rgb(180, 65, 151)">极限计算</font></span>
+                    </td>
                 </tr>
                 <tr>
                     <td align="center">
@@ -86,6 +90,9 @@
                     </td>
                     <td align="center">
                         {{template "monsterSelect" .Monster}}
+                    </td>
+                    <td align="center">
+                        
                     </td>
                 </tr>
                 <tr>
@@ -99,14 +106,28 @@
                         {{template "monsterResult" ""}}
                         <br>
                         <br>
+                        <span ><font style="color:rgb(180, 65, 151)">怪物减抗</font></span>
+                        <br>
                         {{template "monsterDebuff" ""}}
                     </td>
                     <td align="center" valign = "top">
                         {{template "extraProperty" ""}}
+                        <br>
+                        <br>
+                        <span ><font style="color:rgb(180, 65, 151)">最优选项</font></span>
+                        <br>
+                        {{template "optimalOptions" .GetReliquaryList}}
+                    </td>
+                    <td align="center" valign = "top">
+                        {{template "optimalProperty" ""}}
                     </td>
                 </tr>
             </table> 
         </form>
     </body>
+    <a href="https://github.com/Kurarion/GenshinCal" target="_blank">
+    <img style="position: absolute; top: 3px; right: 3px; border: 0;" 
+    src="https://badgen.net/badge/github/github?icon=github&label&color=grey">
+    </a>
 </html>
 {{ end }}

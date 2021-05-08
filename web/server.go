@@ -43,13 +43,14 @@ func Start(addr string) {
 
 func log(r *http.Request) {
 	if logState {
-		fmt.Printf("[%s]:<%s>\n", time.Now().Local(), r.URL.Path)
+		fmt.Printf("[%s]:<%s> From <%s> With <%s>\n", time.Now().Local(), r.URL.Path, r.RemoteAddr, r.Method)
 	}
 }
 
 func character(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case "POST":
+		log(r)
 		if err := r.ParseForm(); err != nil {
 			fmt.Println("parse form error. err: ", err)
 		}
@@ -70,6 +71,7 @@ func character(w http.ResponseWriter, r *http.Request) {
 func weapon(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case "POST":
+		log(r)
 		if err := r.ParseForm(); err != nil {
 			fmt.Println("parse form error. err: ", err)
 		}
@@ -90,6 +92,7 @@ func weapon(w http.ResponseWriter, r *http.Request) {
 func monster(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case "POST":
+		log(r)
 		if err := r.ParseForm(); err != nil {
 			fmt.Println("parse form error. err: ", err)
 		}
@@ -110,6 +113,7 @@ func monster(w http.ResponseWriter, r *http.Request) {
 func reliquaryMain(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case "POST":
+		log(r)
 		if err := r.ParseForm(); err != nil {
 			fmt.Println("parse form error. err: ", err)
 		}
@@ -124,7 +128,7 @@ func reliquaryMain(w http.ResponseWriter, r *http.Request) {
 func reliquaryAffix(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case "POST":
-
+		log(r)
 		x := data.GetReliquaryAffixMap()
 		js, _ := json.Marshal(x)
 
@@ -135,6 +139,7 @@ func reliquaryAffix(w http.ResponseWriter, r *http.Request) {
 func weaponSkillAffix(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case "POST":
+		log(r)
 		if err := r.ParseForm(); err != nil {
 			fmt.Println("parse form error. err: ", err)
 		}
@@ -154,8 +159,6 @@ func weaponSkillAffix(w http.ResponseWriter, r *http.Request) {
 
 func root(w http.ResponseWriter, r *http.Request) {
 	log(r)
-	// r.ParseForm()
-	// fmt.Println(r.Form)
 
 	w.Header().Set("Content-Type", "text/html")
 	switch r.Method {

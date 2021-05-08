@@ -1,5 +1,7 @@
 package calc
 
+//废弃
+
 //				|-------------------------------------------------------
 //				| 					| [人物攻击力 + 武器攻击力](基础攻击力)
 //				| 					| *
@@ -63,55 +65,55 @@ package calc
 //	各元素抗性
 //							施加减抗
 
-//基础伤害值
-func (c InputData) getBaseDamageValue(art Artifacts) float64 {
-	return 1.0
-}
+// //基础伤害值
+// func (c InputData) getBaseDamageValue(art Artifacts) float64 {
+// 	return 1.0
+// }
 
-//增加伤害值
-func (c InputData) getBoostDamageValue(art Artifacts) float64 {
-	BaseDamageValueMat := getBaseDamageValue()
-	BoostMat := .0
-	return BaseDamageValueMat * BoostMat
-}
+// //增加伤害值
+// func (c InputData) getBoostDamageValue(art Artifacts) float64 {
+// 	BaseDamageValueMat := getBaseDamageValue()
+// 	BoostMat := .0
+// 	return BaseDamageValueMat * BoostMat
+// }
 
-//基础伤害值 + 增加伤害值
-func (c InputData) getBaseDamageValueWithBoost() float64 {
-	return getBaseDamageValue() + getBoostDamageValue()
-}
+// //基础伤害值 + 增加伤害值
+// func (c InputData) getBaseDamageValueWithBoost() float64 {
+// 	return getBaseDamageValue() + getBoostDamageValue()
+// }
 
-//暴击率
-func (c InputData) getCriticalRate() float64 {
-	return 0.05
-}
+// //暴击率
+// func (c InputData) getCriticalRate() float64 {
+// 	return 0.05
+// }
 
-//暴击伤害加成系数
-func (c InputData) getCriticalBoost() float64 {
-	return 1.0 + 0.5
-}
+// //暴击伤害加成系数
+// func (c InputData) getCriticalBoost() float64 {
+// 	return 1.0 + 0.5
+// }
 
-//增幅反应加成系数
-func (c InputData) getElementBoost() float64 {
-	return 1.0 + 0.0
-}
+// //增幅反应加成系数
+// func (c InputData) getElementBoost() float64 {
+// 	return 1.0 + 0.0
+// }
 
-//等级，减防相关增减伤系数
-func (c InputData) getLevelAndDefEffect() float64 {
-	return 0.5
-}
+// //等级，减防相关增减伤系数
+// func (c InputData) getLevelAndDefEffect() float64 {
+// 	return 0.5
+// }
 
-//各元素抗性系数
-func (c InputData) getResistanceEffect() float64 {
-	return 0.9
-}
+// //各元素抗性系数
+// func (c InputData) getResistanceEffect() float64 {
+// 	return 0.9
+// }
 
-//最终结果
-func (c InputData) GetDamageValue() float64 {
-	valuebase := getBaseDamageValueWithBoost() * getLevelAndDefEffect() * getResistanceEffect()
-	valueWithCrit := valuebase * getCriticalBoost()
-	valueWithCritExpect := valueWithCrit * getCriticalRate()
-	valueWithEle := valuebase * getElementBoost()
-	valueWithCritWithEleExpect := valueWithCrit * getElementBoost()
-	valueAllExpect := valueWithCritExpect * getElementBoost()
-	return 0.0
-}
+// //最终结果
+// func (c InputData) GetDamageValue() float64 {
+// 	valuebase := getBaseDamageValueWithBoost() * getLevelAndDefEffect() * getResistanceEffect()
+// 	valueWithCrit := valuebase * getCriticalBoost()
+// 	valueWithCritExpect := valueWithCrit * getCriticalRate()
+// 	valueWithEle := valuebase * getElementBoost()
+// 	valueWithCritWithEleExpect := valueWithCrit * getElementBoost()
+// 	valueAllExpect := valueWithCritExpect * getElementBoost()
+// 	return 0.0
+// }
