@@ -157,6 +157,7 @@ function optimalCal(){
     var targetDamageType = getOptimalDamageType();
     var maxCritical = getOptimalMaxCritical();
     var totalCritObj =$("input#"+TYPE_OPTIMAL+PROP_CRITICAL);
+    $("input#"+targetDamageType).val(0);
     for(var i = 0; i <= MaxValid; ++i){
         var thisLoopMax = parseFloat($("input#"+targetDamageType).val());
         var UpdatedName = "";
