@@ -208,6 +208,9 @@ function setJSON(type,input){
 
 function parseJSON(type, input){
     res = "";
+    if(input == "null" || typeof input == "undefined"){
+        return;
+    }
     var obj = JSON.parse(input)
     switch (type){
         case TYPE_WEAPON_SKILL_AFFIX:
