@@ -7,7 +7,7 @@
     {{- end}}
     {{- end}}
 </select>
-<select id="characterSelect" onchange="getData(['character'])">
+<select id="characterSelect" onchange="getData(['character','characterSkills'])">
     <option value=""></option>
     {{range . -}}
     <option value="{{.Id}}" type="{{html .WeaponType}}">{{html .Name}}</option>

@@ -1,5 +1,6 @@
 
 const TYPE_CHARACTER = "character";
+const TYPE_CHARACTER_SKILLS = "characterSkills";
 const TYPE_WEAPON = "weapon";
 const TYPE_MONSTER = "monster";
 const TYPE_WEAPON_SKILL_AFFIX = "weaponSkillAffix";
@@ -54,7 +55,7 @@ function init(param){
     $("select#" + TYPE_DAMAGE + NAME_TYPE).change(update);
     $("select#" + TYPE_DAMAGE + NAME_ELEMENT_TYPE).change(update);
     $("span#extraProperty select").change(update);
-    var objs = $("input[id^=" + TYPE_ALL + "], input[id^=" + TYPE_OPTIMAL + "], input[name^=" + TYPE_OPTIMAL_RELIQUARY + "]");
+    var objs = $("input[id^=" + TYPE_ALL + "], input[name^=" + TYPE_OPTIMAL_RELIQUARY + "]");
     objs.attr("readonly","readonly");
     objs.attr("style","color:gray");
     lockVars = {
@@ -145,6 +146,12 @@ function createData(type){
                 data = "id=" + id + "&level=" + level;
             }
             break;
+        case TYPE_CHARACTER_SKILLS:
+            id = $("#"+TYPE_CHARACTER+"Select").val();
+            if(id.length != 0){
+                data = "id=" + id;
+            }
+            break;
         case TYPE_RELIQUARY_MAIN:
         case TYPE_RELIQUARY_AFFIX:
             data = "1";
@@ -167,6 +174,11 @@ function createCallback(type) {
             }
             break;
         case TYPE_WEAPON_SKILL_AFFIX:
+            func = function(result){
+                $("#" + type + "Result").attr("title", parseJSON(type, result));
+            }
+            break;
+        case TYPE_CHARACTER_SKILLS:
             func = function(result){
                 $("#" + type + "Result").attr("title", parseJSON(type, result));
             }
@@ -202,6 +214,22 @@ function parseJSON(type, input){
             var patt = /<.*?>/g;
             res += "特效名: " + obj.Name
             res += "\n特效: " + obj.Desc.replace(patt,"");
+            break;
+        case TYPE_CHARACTER_SKILLS:
+            var patt = /<.*?>/g;
+            var patt2 = /\\n/g;
+            res += ">元素战技: " + obj.ESkill.Name +
+            "\n" + obj.ESkill.Desc.replace(patt,"").replace(patt2,"") +
+            "\n>元素爆发: " + obj.QSkill.Name +
+            "\n" + obj.QSkill.Desc.replace(patt,"").replace(patt2,"");
+            for(var i = 0; i < obj.ProudSkills.length; ++i){
+                res += "\n>天赋[" + (i+1) + "]: " + obj.ProudSkills[i].Name +
+                    "\n" + obj.ProudSkills[i].Desc.replace(patt,"").replace(patt2,"");
+            }
+            for(var i = 0; i < obj.Talents.length; ++i){
+                res += "\n>命座[" + (i+1) + "]: " + obj.Talents[i].Name +
+                    "\n" + obj.Talents[i].Desc.replace(patt,"").replace(patt2,"");
+            }
             break;
     }
     return res;

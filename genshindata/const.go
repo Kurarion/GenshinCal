@@ -122,4 +122,12 @@ const (
 	MonsterExcelConfigData = "/ExcelBinOutput/MonsterExcelConfigData.json"
 	//怪物基础升级提升值(对应)
 	MonsterCurveExcelConfigData = "/ExcelBinOutput/MonsterCurveExcelConfigData.json"
+	//人物全技能列表
+	AvatarSkillDepotExcelConfigData = "/ExcelBinOutput/AvatarSkillDepotExcelConfigData.json"
+	//人物EQ技能
+	AvatarSkillExcelConfigData = "/ExcelBinOutput/AvatarSkillExcelConfigData.json"
+	//人物天赋
+	ProudSkillExcelConfigData = "/ExcelBinOutput/ProudSkillExcelConfigData.json"
+	//人物命座
+	AvatarTalentExcelConfigData = "/ExcelBinOutput/AvatarTalentExcelConfigData.json"
 )

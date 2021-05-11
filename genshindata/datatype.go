@@ -15,6 +15,7 @@ type avatarBaseData struct {
 	ChargeEfficiency float64          `json:"ChargeEfficiency"`
 	PropGrowCurves   []propGrowCurves `json:"PropGrowCurves"`
 	AvatarPromoteId  uint64           `json:"AvatarPromoteId"`
+	SkillDepotId     uint64           `json:"SkillDepotId"`
 }
 type avatarBaseListData []avatarBaseData
 
@@ -135,3 +136,44 @@ type subHurtData struct {
 	RockSubHurt     float64 `json:"RockSubHurt"`
 	PhysicalSubHurt float64 `json:"PhysicalSubHurt"`
 }
+
+//人物全技能列表
+type avatarSkillsData struct {
+	Id                      uint64                     `json:"Id"`
+	EnergySkill             uint64                     `json:"EnergySkill"`
+	Skills                  []uint64                   `json:"Skills"`
+	InherentProudSkillOpens []avatarInherentProudSkill `json:"InherentProudSkillOpens"`
+	Talents                 []uint64                   `json:"Talents"`
+}
+type avatarSkillsListData []avatarSkillsData
+
+//人物天赋子结构
+type avatarInherentProudSkill struct {
+	ProudSkillGroupId      uint64 `json:"ProudSkillGroupId"`
+	NeedAvatarPromoteLevel int    `json:"NeedAvatarPromoteLevel"`
+}
+
+//人物EQ技能
+type avatarSkillData struct {
+	Id              uint64  `json:"Id"`
+	NameTextMapHash uint64  `json:"NameTextMapHash"`
+	DescTextMapHash uint64  `json:"DescTextMapHash"`
+	CdTime          float64 `json:"CdTime"`
+}
+type avatarSkillListData []avatarSkillData
+
+//人物天赋
+type avatarProudSkillData struct {
+	ProudSkillGroupId uint64 `json:"ProudSkillGroupId"`
+	NameTextMapHash   uint64 `json:"NameTextMapHash"`
+	DescTextMapHash   uint64 `json:"DescTextMapHash"`
+}
+type avatarProudSkillListData []avatarProudSkillData
+
+//人物命座
+type avatarTalentData struct {
+	TalentId        uint64 `json:"TalentId"`
+	NameTextMapHash uint64 `json:"NameTextMapHash"`
+	DescTextMapHash uint64 `json:"DescTextMapHash"`
+}
+type avatarTalentListData []avatarTalentData

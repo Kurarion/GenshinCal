@@ -15,7 +15,7 @@
             </td>
             <td>
                 <input type="range" step="1" id="optimalValidNum" onchange="setOptimalValidNum();" onwheel="setOptimalValidNumByWheel();return false;" size="5"/>
-                <input id="optimalValidNumShow" size="1" />
+                <input id="optimalValidNumShow" onchange="setOptimalValidNum(this.value);" size="1" />
             </td>
         </tr>
         <tr>
@@ -96,7 +96,7 @@
             </td>
             <td>
                 <input type="range" step="0.01" id="optimalCriMax" onchange="setOptimalCriMax();" onwheel="setOptimalCriMaxByWheel();return false;" size="5" />
-                <input id="optimalCriMaxShow" size="1" />
+                <input id="optimalCriMaxShow" onchange="setOptimalCriMax(this.value);" size="1" />
             </td>
         </tr>
         <tr>

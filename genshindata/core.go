@@ -34,6 +34,27 @@ func GetAvatarMap() map[uint64]*Avatar {
 	return avatar
 }
 
+//取得角色全技能
+func GetAvatarSkills(id interface{}) *AvatarSkills {
+
+	var targeID uint64
+	switch v := id.(type) {
+	case string:
+		targeID, _ = strconv.ParseUint(v, 10, 64)
+	case uint64:
+		targeID = v
+	case int:
+		targeID = uint64(v)
+	}
+
+	return avatarSkills[targeID]
+}
+
+//取得角色全技能列表
+func GetAvatarSkillsMap() map[uint64]*AvatarSkills {
+	return avatarSkills
+}
+
 //取得武器
 func GetWeapon(id interface{}) *Weapon {
 

@@ -70,6 +70,12 @@ function setOptimalValidNum(num){
     if(typeof num == "undefined"){
         num = optimalValidObj.val();
     }
+    num = parseInt(num);
+    if(num > MaxValid){
+        num = MaxValid;
+    }else if(num < MinValid){
+        num = MinValid;
+    }
     optimalValidObj.val(num);
     optimalValidShowObj.val(num);
     setToOptimal(num);
@@ -99,6 +105,12 @@ function setOptimalCriMax(num){
     var optimalCriMaxShowObj = $("#" + TYPE_OPTIMAL + "CriMax" + "Show");
     if(typeof num == "undefined"){
         num = optimalCriMaxObj.val();
+    }
+    num = parseFloat(num);
+    if(num < 0.05){
+        num = 0.05;
+    }else if(num > 1){
+        num = 1;
     }
     optimalCriMaxObj.val(num);
     optimalCriMaxShowObj.val(num);
@@ -198,6 +210,7 @@ function optimalCal(){
     }
 
     setOptimalValidNum(MaxValid);
+    alert("计算完成");
 }
 
 function setToOptimal(index){

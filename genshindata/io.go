@@ -40,6 +40,9 @@ var monster map[uint64]*Monster
 //怪物名ID映射表
 var monsterNameMap map[string]uint64
 
+//人物技能集
+var avatarSkills map[uint64]*AvatarSkills
+
 //序列化列表
 var saveObjList map[string]interface{}
 
@@ -54,6 +57,7 @@ const avatarFileName = "avatar_map.json"
 const weaponFileName = "weapon_map.json"
 const reliquaryAffixFileName = "reliquary_affix_map.json"
 const reliquaryMainFileName = "reliquary_main_map.json"
+const avatarSkillsFileName = "avatar_skills_map.json"
 const monsterFileName = "monster_map.json"
 
 //文件完整路径
@@ -61,6 +65,7 @@ const avatarFileFullPath = savePath + slash + avatarFileName
 const weaponFileFullPath = savePath + slash + weaponFileName
 const reliquaryAffixFileFullPath = savePath + slash + reliquaryAffixFileName
 const reliquaryMainFileFullPath = savePath + slash + reliquaryMainFileName
+const avatarSkillsFileFullPath = savePath + slash + avatarSkillsFileName
 const monsterFileFullPath = savePath + slash + monsterFileName
 
 //圣遗物词条depotID
@@ -96,18 +101,22 @@ const defaultBuffSize = 15000
 
 //名
 const (
-	avatarExcelConfig         = "avatarExcelConfigData"
-	avatarCurveExcelConfig    = "avatarCurveExcelConfigData"
-	avatarPromoteExcelConfig  = "avatarPromoteExcelConfigData"
-	weaponExcelConfig         = "weaponExcelConfigData"
-	weaponCurveExcelConfig    = "weaponCurveExcelConfigData"
-	weaponPromoteExcelConfig  = "weaponPromoteExcelConfigData"
-	equipAffixExcelConfig     = "EquipAffixExcelConfigData"
-	reliquaryAffixExcelConfig = "ReliquaryAffixExcelConfigData"
-	reliquaryLevelExcelConfig = "ReliquaryLevelExcelConfigData"
-	monsterExcelConfig        = "MonsterExcelConfigData"
-	monsterCurveExcelConfig   = "MonsterCurveExcelConfigData"
-	textMapFile               = "textMapData"
+	avatarExcelConfig           = "avatarExcelConfigData"
+	avatarCurveExcelConfig      = "avatarCurveExcelConfigData"
+	avatarPromoteExcelConfig    = "avatarPromoteExcelConfigData"
+	weaponExcelConfig           = "weaponExcelConfigData"
+	weaponCurveExcelConfig      = "weaponCurveExcelConfigData"
+	weaponPromoteExcelConfig    = "weaponPromoteExcelConfigData"
+	equipAffixExcelConfig       = "EquipAffixExcelConfigData"
+	reliquaryAffixExcelConfig   = "ReliquaryAffixExcelConfigData"
+	reliquaryLevelExcelConfig   = "ReliquaryLevelExcelConfigData"
+	monsterExcelConfig          = "MonsterExcelConfigData"
+	monsterCurveExcelConfig     = "MonsterCurveExcelConfigData"
+	AvatarSkillDepotExcelConfig = "AvatarSkillDepotExcelConfigData"
+	AvatarSkillExcelConfig      = "AvatarSkillExcelConfigData"
+	ProudSkillExcelConfig       = "ProudSkillExcelConfigData"
+	AvatarTalentExcelConfig     = "AvatarTalentExcelConfigData"
+	textMapFile                 = "textMapData"
 )
 
 //级别
@@ -122,18 +131,22 @@ const (
 func init() {
 	//下载URL初始化
 	downloadList = map[string]string{
-		avatarExcelConfig:         repositoryURL + avatarExcelConfigData,
-		avatarCurveExcelConfig:    repositoryURL + avatarCurveExcelConfigData,
-		avatarPromoteExcelConfig:  repositoryURL + avatarPromoteExcelConfigData,
-		weaponExcelConfig:         repositoryURL + weaponExcelConfigData,
-		weaponCurveExcelConfig:    repositoryURL + weaponCurveExcelConfigData,
-		weaponPromoteExcelConfig:  repositoryURL + weaponPromoteExcelConfigData,
-		equipAffixExcelConfig:     repositoryURL + EquipAffixExcelConfigData,
-		reliquaryAffixExcelConfig: repositoryURL + ReliquaryAffixExcelConfigData,
-		reliquaryLevelExcelConfig: repositoryURL + ReliquaryLevelExcelConfigData,
-		monsterExcelConfig:        repositoryURL + MonsterExcelConfigData,
-		monsterCurveExcelConfig:   repositoryURL + MonsterCurveExcelConfigData,
-		textMapFile:               repositoryURL + textMapData,
+		avatarExcelConfig:           repositoryURL + avatarExcelConfigData,
+		avatarCurveExcelConfig:      repositoryURL + avatarCurveExcelConfigData,
+		avatarPromoteExcelConfig:    repositoryURL + avatarPromoteExcelConfigData,
+		weaponExcelConfig:           repositoryURL + weaponExcelConfigData,
+		weaponCurveExcelConfig:      repositoryURL + weaponCurveExcelConfigData,
+		weaponPromoteExcelConfig:    repositoryURL + weaponPromoteExcelConfigData,
+		equipAffixExcelConfig:       repositoryURL + EquipAffixExcelConfigData,
+		reliquaryAffixExcelConfig:   repositoryURL + ReliquaryAffixExcelConfigData,
+		reliquaryLevelExcelConfig:   repositoryURL + ReliquaryLevelExcelConfigData,
+		monsterExcelConfig:          repositoryURL + MonsterExcelConfigData,
+		monsterCurveExcelConfig:     repositoryURL + MonsterCurveExcelConfigData,
+		AvatarSkillDepotExcelConfig: repositoryURL + AvatarSkillDepotExcelConfigData,
+		AvatarSkillExcelConfig:      repositoryURL + AvatarSkillExcelConfigData,
+		ProudSkillExcelConfig:       repositoryURL + ProudSkillExcelConfigData,
+		AvatarTalentExcelConfig:     repositoryURL + AvatarTalentExcelConfigData,
+		textMapFile:                 repositoryURL + textMapData,
 	}
 	//文件列表初始化
 	fileList = map[string]fileInfo{
@@ -143,6 +156,7 @@ func init() {
 		"reliquary_affix_map": {path: reliquaryAffixFileFullPath, class: js},
 		"reliquary_main_map":  {path: reliquaryMainFileFullPath, class: js},
 		"monster_map":         {path: monsterFileFullPath, class: js},
+		"avatar_skills_map":   {path: avatarSkillsFileFullPath, class: js},
 	}
 	saveObjList = map[string]interface{}{
 		avatarFileFullPath:         &avatar,
@@ -150,6 +164,7 @@ func init() {
 		reliquaryAffixFileFullPath: &reliquaryAffixMap,
 		reliquaryMainFileFullPath:  &reliquaryMainMap,
 		monsterFileFullPath:        &monster,
+		avatarSkillsFileFullPath:   &avatarSkills,
 	}
 	//角色对应初始化
 	avatar = make(map[uint64]*Avatar)
@@ -168,6 +183,9 @@ func init() {
 	//怪物对应初始化
 	monster = make(map[uint64]*Monster)
 	monsterNameMap = make(map[string]uint64)
+
+	//人物技能对应初始化
+	avatarSkills = make(map[uint64]*AvatarSkills)
 
 	//正则
 	regx = make([]*regexp.Regexp, 2, 2)
@@ -325,6 +343,11 @@ func update() error {
 	//怪物
 	monsterBaseDataList := make(monsterBaseListData, 0)
 	monsterGrowCurvesDataList := make(growCurvesListData, 0)
+	//人物技能
+	avatarSkillsDataList := make(avatarSkillsListData, 0)
+	avatarSkillDataList := make(avatarSkillListData, 0)
+	avatarProudSkillDataList := make(avatarProudSkillListData, 0)
+	avatarTalentDataList := make(avatarTalentListData, 0)
 	//名
 	textMap := make(map[uint64]string)
 	for i, v := range content {
@@ -351,11 +374,20 @@ func update() error {
 			json.Unmarshal(v.Bytes(), &monsterBaseDataList)
 		case monsterCurveExcelConfig:
 			json.Unmarshal(v.Bytes(), &monsterGrowCurvesDataList)
+		case AvatarSkillDepotExcelConfig:
+			json.Unmarshal(v.Bytes(), &avatarSkillsDataList)
+		case AvatarSkillExcelConfig:
+			json.Unmarshal(v.Bytes(), &avatarSkillDataList)
+		case ProudSkillExcelConfig:
+			json.Unmarshal(v.Bytes(), &avatarProudSkillDataList)
+		case AvatarTalentExcelConfig:
+			json.Unmarshal(v.Bytes(), &avatarTalentDataList)
 		case textMapFile:
 			json.Unmarshal(v.Bytes(), &textMap)
 		}
 	}
 	//数据处理
+	textMap[0] = ""
 	//人物
 	avatarGrowCurvesDataMap := make(map[int]*growCurvesData)
 	avatarPromoteDataMap := make(map[uint64][]*promoteData)
@@ -432,6 +464,60 @@ func update() error {
 	for i, v := range monsterGrowCurvesDataMap[1].CurveInfos {
 		monsterCurvesIndexMap[v.Type] = i
 	}
+	//人物技能
+	avatarSkillsDataMap := make(map[uint64]*avatarSkillsData)
+	avatarSkillDataMap := make(map[uint64]*avatarSkillData)
+	avatarProudSkillDataMap := make(map[uint64]*avatarProudSkillData)
+	avatarTalentDataMap := make(map[uint64]*avatarTalentData)
+	for i := range avatarSkillsDataList {
+		avatarSkillsDataMap[avatarSkillsDataList[i].Id] = &avatarSkillsDataList[i]
+	}
+	for i := range avatarSkillDataList {
+		avatarSkillDataMap[avatarSkillDataList[i].Id] = &avatarSkillDataList[i]
+	}
+	for i := range avatarProudSkillDataList {
+		avatarProudSkillDataMap[avatarProudSkillDataList[i].ProudSkillGroupId] = &avatarProudSkillDataList[i]
+	}
+	for i := range avatarTalentDataList {
+		avatarTalentDataMap[avatarTalentDataList[i].TalentId] = &avatarTalentDataList[i]
+	}
+	for i := range avatarSkillsDataMap {
+		temp := avatarSkillsDataMap[i]
+		if temp.Skills[1] == 0 {
+			continue
+		}
+		avatarSkills[temp.Id] = &AvatarSkills{
+			Id: temp.Id,
+			ESkill: AvatarSkillInfo{
+				Name: textMap[avatarSkillDataMap[temp.Skills[1]].NameTextMapHash],
+				Desc: htmlColorTag(textMap[avatarSkillDataMap[temp.Skills[1]].DescTextMapHash]),
+			},
+			QSkill: AvatarSkillInfo{
+				Name: textMap[avatarSkillDataMap[temp.EnergySkill].NameTextMapHash],
+				Desc: htmlColorTag(textMap[avatarSkillDataMap[temp.EnergySkill].DescTextMapHash]),
+			},
+		}
+		for ii := range temp.InherentProudSkillOpens {
+			temp2 := temp.InherentProudSkillOpens[ii]
+			if temp2.ProudSkillGroupId == 0 {
+				continue
+			}
+			avatarSkills[temp.Id].ProudSkills = append(avatarSkills[temp.Id].ProudSkills, AvatarSkillInfo{
+				Name: textMap[avatarProudSkillDataMap[temp2.ProudSkillGroupId].NameTextMapHash],
+				Desc: htmlColorTag(textMap[avatarProudSkillDataMap[temp2.ProudSkillGroupId].DescTextMapHash]),
+			})
+		}
+		for ii := range temp.Talents {
+			temp2 := temp.Talents[ii]
+			if temp2 == 0 {
+				continue
+			}
+			avatarSkills[temp.Id].Talents = append(avatarSkills[temp.Id].Talents, AvatarSkillInfo{
+				Name: textMap[avatarTalentDataMap[temp2].NameTextMapHash],
+				Desc: htmlColorTag(textMap[avatarTalentDataMap[temp2].DescTextMapHash]),
+			})
+		}
+	}
 	//计算
 	//人物
 	for i := range avatarBaseDataList {
@@ -445,6 +531,7 @@ func update() error {
 			IconName:        currentAvatarData.IconName,
 			WeaponType:      currentAvatarData.WeaponType,
 			LevelMap:        make(map[string]*Property),
+			SkillDepotId:    currentAvatarData.SkillDepotId,
 		}
 		//级别曲线参数
 		var hpTypeIndex int

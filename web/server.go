@@ -29,6 +29,7 @@ func init() {
 func Start(addr string) {
 	http.Handle("/js/", http.FileServer(http.Dir("")))
 	http.HandleFunc("/api/character", character)
+	http.HandleFunc("/api/characterSkills", characterSkills)
 	http.HandleFunc("/api/weapon", weapon)
 	http.HandleFunc("/api/monster", monster)
 	http.HandleFunc("/api/reliquaryMain", reliquaryMain)
@@ -151,6 +152,23 @@ func weaponSkillAffix(w http.ResponseWriter, r *http.Request) {
 		}
 
 		x := data.GetWeapon(id).SkillAffixMap[level]
+		js, _ := json.Marshal(x)
+
+		io.WriteString(w, string(js))
+	}
+}
+
+func characterSkills(w http.ResponseWriter, r *http.Request) {
+	switch r.Method {
+	case "POST":
+		log(r)
+		if err := r.ParseForm(); err != nil {
+			fmt.Println("parse form error. err: ", err)
+		}
+
+		id := r.Form["id"][0]
+
+		x := data.GetAvatarSkills(data.GetAvatar(id).SkillDepotId)
 		js, _ := json.Marshal(x)
 
 		io.WriteString(w, string(js))

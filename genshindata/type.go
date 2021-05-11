@@ -1,5 +1,7 @@
 package genshindata
 
+import "strconv"
+
 type Avatar struct {
 	Id              uint64               `json:"Id"`
 	Name            string               `json:"Name"`
@@ -9,6 +11,7 @@ type Avatar struct {
 	IconName        string               `json:"IconName"`
 	WeaponType      string               `json:"WeaponType"`
 	LevelMap        map[string]*Property `json:"LevelList"`
+	SkillDepotId    uint64               `json:"SkillDepotId"`
 }
 
 type Property struct {
@@ -80,4 +83,35 @@ type MonsterProperty struct {
 	Attack  float64 `json:"Attack"`
 	Defense float64 `json:"Defense"`
 	subHurtData
+}
+
+//人物技能集
+type AvatarSkills struct {
+	Id          uint64            `json:"Id"`
+	ESkill      AvatarSkillInfo   `json:"ESkill"`
+	QSkill      AvatarSkillInfo   `json:"QSkill"`
+	ProudSkills []AvatarSkillInfo `json:"ProudSkills"`
+	Talents     []AvatarSkillInfo `json:"Talents"`
+}
+
+func (c *AvatarSkills) String() string {
+	var res = "元素战技: " + c.ESkill.Name +
+		"\n" + c.ESkill.Desc +
+		"\n元素爆发: " + c.QSkill.Name +
+		"\n" + c.QSkill.Desc
+	for i := range c.ProudSkills {
+		res += "\n天赋" + strconv.Itoa(i+1) + ": " + c.ProudSkills[i].Name +
+			"\n" + c.ProudSkills[i].Desc
+	}
+	for i := range c.Talents {
+		res += "\n命座" + strconv.Itoa(i+1) + ": " + c.Talents[i].Name +
+			"\n" + c.Talents[i].Desc
+	}
+	return res
+}
+
+//人物技能
+type AvatarSkillInfo struct {
+	Name string `json:"Name"`
+	Desc string `json:"Desc"`
 }
