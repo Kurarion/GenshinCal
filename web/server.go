@@ -22,7 +22,17 @@ func init() {
 		Weapon:  data.GetWeaponMap(),
 		Monster: data.GetMonsterMap(),
 	}
-	rootHtmlTemplate = template.Must(template.ParseGlob("./html/*.html"))
+	funcs := template.FuncMap{
+		"Loop": func(count int) []int {
+			var res []int
+			for i := 0; i < count; i++ {
+				res = append(res, i)
+			}
+			return res
+		},
+	}
+	rootHtmlTemplate = template.New("root").Funcs(funcs)
+	rootHtmlTemplate = template.Must(rootHtmlTemplate.ParseGlob("./html/*.html"))
 }
 
 //Start Server启动

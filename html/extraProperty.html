@@ -12,98 +12,65 @@
                 上限值
             </td>
         </tr>
+        {{range $i := Loop 4 -}}
         <tr>
             <td>
-                <select id="extraName0">
+                <select id="extraName{{$i}}">
                     <option value=""></option>
                     <option value="Attack">攻击</option>
                     <option value="Defense">防御</option>
                     <option value="Hp">生命</option>
+                    <option value="Critical">暴击率</option>
+                    <option value="CriticalHurt">暴击伤害</option>
+                    <option value="ChargeEfficiency">充能效率</option>
+                    <option value="ElementMaster">元素精通</option>
+                    <option value="Ice">冰伤</option>
+                    <option value="Wind">风伤</option>
+                    <option value="Physical">物伤</option>
+                    <option value="Elec">雷伤</option>
+                    <option value="Rock">岩伤</option>
+                    <option value="Fire">火伤</option>
+                    <option value="Water">水伤</option>
+                    <option value="Grass">草伤</option>
+                    <option value="All">全增伤</option>
+                    <option value="NormalAtk">普攻增伤</option>
+                    <option value="HeavyAtk">重击增伤</option>
+                    <option value="Skill">元素战技增伤</option>
+                    <option value="Ult">元素爆发增伤</option>
                 </select>
             </td>
             <td>
-                <select id="extraCalName0">
+                <select id="extraCalName{{$i}}">
                     <option value=""></option>
                     <option value="Attack">攻击</option>
                     <option value="Defense">防御</option>
                     <option value="Hp">生命</option>
-                </select>
-                x
-                <input id="extraCalValue0" value=0 size="10" />
-            </td>
-            <td>
-                <input id="extraMaxValue0" value=0 size="10" />
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <select id="extraName1">
-                    <option value=""></option>
-                    <option value="Attack">攻击</option>
-                    <option value="Defense">防御</option>
-                    <option value="Hp">生命</option>
-                </select>
-            </td>
-            <td>
-                <select id="extraCalName1">
-                    <option value=""></option>
-                    <option value="Attack">攻击</option>
-                    <option value="Defense">防御</option>
-                    <option value="Hp">生命</option>
-                </select>
-                x
-                <input id="extraCalValue1" value=0 size="10" />
-            </td>
-            <td>
-                <input id="extraMaxValue1" value=0 size="10" />
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <select id="extraName2">
-                    <option value=""></option>
-                    <option value="Attack">攻击</option>
-                    <option value="Defense">防御</option>
-                    <option value="Hp">生命</option>
-                </select>
-            </td>
-            <td>
-                <select id="extraCalName2">
-                    <option value=""></option>
-                    <option value="Attack">攻击</option>
-                    <option value="Defense">防御</option>
-                    <option value="Hp">生命</option>
+                    <option value="Critical">暴击率</option>
+                    <option value="CriticalHurt">暴击伤害</option>
+                    <option value="ChargeEfficiency">充能效率</option>
+                    <option value="ElementMaster">元素精通</option>
+                    <option value="Ice">冰伤</option>
+                    <option value="Wind">风伤</option>
+                    <option value="Physical">物伤</option>
+                    <option value="Elec">雷伤</option>
+                    <option value="Rock">岩伤</option>
+                    <option value="Fire">火伤</option>
+                    <option value="Water">水伤</option>
+                    <option value="Grass">草伤</option>
+                    <option value="All">全增伤</option>
+                    <option value="NormalAtk">普攻增伤</option>
+                    <option value="HeavyAtk">重击增伤</option>
+                    <option value="Skill">元素战技增伤</option>
+                    <option value="Ult">元素爆发增伤</option>
                 </select>
                 x
-                <input id="extraCalValue2" value=0 size="10" />
+                <input id="extraCalValue{{$i}}" value=0 size="3" />
             </td>
             <td>
-                <input id="extraMaxValue2" value=0 size="10" />
+                <input id="extraMaxValue{{$i}}" value=0 size="3" />
             </td>
         </tr>
-        <tr>
-            <td>
-                <select id="extraName3">
-                    <option value=""></option>
-                    <option value="Attack">攻击</option>
-                    <option value="Defense">防御</option>
-                    <option value="Hp">生命</option>
-                </select>
-            </td>
-            <td>
-                <select id="extraCalName3">
-                    <option value=""></option>
-                    <option value="Attack">攻击</option>
-                    <option value="Defense">防御</option>
-                    <option value="Hp">生命</option>
-                </select>
-                x
-                <input id="extraCalValue3" value=0 size="10"/>
-            </td>
-            <td>
-                <input id="extraMaxValue3" value=0 size="10"/>
-            </td>
-        </tr>
+        {{- end}}
     </table>
 </span>
 {{- end }}

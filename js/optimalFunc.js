@@ -149,6 +149,7 @@ function initOptimalStep(){
     optimalReliquaryAffixNameList.push("FIGHT_PROP_ELEMENT_MASTERY");
     optimalReliquaryAffixNameList.push("FIGHT_PROP_CRITICAL");
     optimalReliquaryAffixNameList.push("FIGHT_PROP_CRITICAL_HURT");
+    optimalReliquaryAffixNameList.push("FIGHT_PROP_CHARGE_EFFICIENCY");
 }
 
 function getOptimalDamageType(){
