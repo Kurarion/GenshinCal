@@ -105,7 +105,7 @@ const (
 	//人物突破提升值(对应)
 	avatarPromoteExcelConfigData = "/ExcelBinOutput/AvatarPromoteExcelConfigData.json"
 	//文字代码对应表
-	textMapData = "/TextMap/TextCHS.json"
+	textMapData = "/TextMap/TextMapCHS.json"
 	//武器定义
 	weaponExcelConfigData = "/ExcelBinOutput/WeaponExcelConfigData.json"
 	//武器基础升级提升值(对应)
