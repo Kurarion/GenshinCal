@@ -46,7 +46,7 @@ func Start(addr string) {
 	http.HandleFunc("/api/reliquaryAffix", reliquaryAffix)
 	http.HandleFunc("/api/weaponSkillAffix", weaponSkillAffix)
 	http.HandleFunc("/", root)
-	err := http.ListenAndServe(addr, nil)
+	err := http.ListenAndServeTLS(addr, "../ssl/server.crt", "../ssl/server.key", nil)
 	if err != nil {
 		fmt.Println("error: ", err)
 	}
